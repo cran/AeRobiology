@@ -7,7 +7,7 @@
 iplot_abundance(data, n.types = 15, y.start = NULL, y.end = NULL,
   interpolation = TRUE, int.method = "lineal", col.bar = "#E69F00",
   type.plot = "static", export.plot = FALSE, export.format = "pdf",
-  ...)
+  exclude = NULL, ...)
 }
 \arguments{
 \item{data}{A \code{data.frame} object including the general database where calculation of the pollen season must be applied. This \code{data.frame} must include a first column in \code{Date} format and the rest of columns in \code{numeric} format belonging to each pollen type by column.}
@@ -27,6 +27,8 @@ iplot_abundance(data, n.types = 15, y.start = NULL, y.end = NULL,
 \item{export.plot}{A \code{logical} value specifying if a plot saved in the working directory will be required or not. If \code{FALSE} graphical results will only be displayed in the active graphics window. If \code{TRUE} graphical results will be displayed in the active graphics window and also a \emph{pdf} or \emph{png} file (according to the \code{export.format} argument) will be saved within the \emph{plot_AeRobiology} directory automatically created in the working directory. This argument is applicable only for \code{"static"} plots. The \code{export.plot} will be \code{FALSE} by default.}
 
 \item{export.format}{A \code{character} string specifying the format selected to save the plot showing the relative abundance of the pollen types. The implemented formats that may be used are: \code{"pdf"} and \code{"png"}. This argument is applicable only for \code{"static"} plots. The \code{export.format} will be \code{"pdf"} by default.}
+
+\item{exclude}{A \code{character} string vector with the names of the pollen types to be excluded from the plot.}
 
 \item{...}{Other additional arguments may be used to customize the exportation of the plots using \code{"pdf"} or \code{"png"} files and therefore arguments from \code{\link[grDevices]{pdf}} and \code{\link[grDevices]{png}} functions (\pkg{grDevices} package) may be implemented. For example, for \emph{pdf} files the user may custom the arguments: \code{width}, \code{height}, \code{family}, \code{title}, \code{fonts}, \code{paper}, \code{bg}, \code{fg}, \code{pointsize...}; and for \emph{png} files the user may custom the arguments: \code{width}, \code{height}, \code{units}, \code{pointsize}, \code{bg}, \code{res...}}
 }

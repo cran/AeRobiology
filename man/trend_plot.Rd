@@ -40,7 +40,7 @@ Also produces an object of the class \code{data.frame} and export a table with t
 Function to calculate the main seasonal indexes of the pollen season (\emph{Start Date}, \emph{Peak Date}, \emph{End Date} and \emph{Pollen Integral}). Trends analysis of the parameters over the seasons. Summary dot plot showing the distribution of the main seasonal indexes over the years.
 }
 \details{
-This function allows to study time series trends of the pollen season. Even though the package was originally designed to treat aerpalinological data, it can be used to study many other atmospheric components (e.g., bacteria in the air, fungi, insects ...) \emph{(Buters et al., 2018; Oteros et al., 2019)}. The study of trends in pollen time series is a common approach to study the impact of climate change or other environmental factors on vegetation (Galan et al., 2016; Garcia_Mozo et al., 2016;  Recio et al., 2018). This tool can also be useful for studying trends in other fields (Oteros et al., 2015).
+This function allows to study time series trends of the pollen season. Even though the package was originally designed to treat aeropalynological data, it can be used to study many other atmospheric components (e.g., bacteria in the air, fungi, insects ...) \emph{(Buters et al., 2018; Oteros et al., 2019)}. The study of trends in pollen time series is a common approach to study the impact of climate change or other environmental factors on vegetation (Galan et al., 2016; Garcia_Mozo et al., 2016;  Recio et al., 2018). This tool can also be useful for studying trends in other fields (Oteros et al., 2015).
 }
 \examples{
 data("munich")

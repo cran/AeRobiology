@@ -11,6 +11,7 @@
 #' @param type.plot A \code{character} string specifying the type of plot selected to show the plot showing the relative abundance of the pollen types. The implemented types that may be used are: \code{static} generates a static \strong{ggplot} object and \code{dynamic} generates a dynamic \strong{plotly} object.
 #' @param export.plot A \code{logical} value specifying if a plot saved in the working directory will be required or not. If \code{FALSE} graphical results will only be displayed in the active graphics window. If \code{TRUE} graphical results will be displayed in the active graphics window and also a \emph{pdf} or \emph{png} file (according to the \code{export.format} argument) will be saved within the \emph{plot_AeRobiology} directory automatically created in the working directory. This argument is applicable only for \code{"static"} plots. The \code{export.plot} will be \code{FALSE} by default.
 #' @param export.format A \code{character} string specifying the format selected to save the plot showing the relative abundance of the pollen types. The implemented formats that may be used are: \code{"pdf"} and \code{"png"}. This argument is applicable only for \code{"static"} plots. The \code{export.format} will be \code{"pdf"} by default.
+#' @param exclude A \code{character} string vector with the names of the pollen types to be excluded from the plot.
 #' @param ... Other additional arguments may be used to customize the exportation of the plots using \code{"pdf"} or \code{"png"} files and therefore arguments from \code{\link[grDevices]{pdf}} and \code{\link[grDevices]{png}} functions (\pkg{grDevices} package) may be implemented. For example, for \emph{pdf} files the user may custom the arguments: \code{width}, \code{height}, \code{family}, \code{title}, \code{fonts}, \code{paper}, \code{bg}, \code{fg}, \code{pointsize...}; and for \emph{png} files the user may custom the arguments: \code{width}, \code{height}, \code{units}, \code{pointsize}, \code{bg}, \code{res...}
 #' @details This function allows to calculate the relative abundance of the pollen types in the air from a database and to display a barplot with the percentage representation of the main pollen types as the graph reported by \emph{Rojo et al. (2016)}. This plot will be generated only for the specified number of the most abundant pollen types using the \code{n.types} argument by the user.\cr
 #' \cr
@@ -51,7 +52,9 @@ iplot_abundance <- function (data,
                              col.bar = "#E69F00",
                              type.plot = "static",
                              export.plot = FALSE,
-                             export.format = "pdf",...){
+                             export.format = "pdf",
+                             exclude = NULL,
+                             ...){
 
 #############################################    CHECK THE ARGUMENTS       #############################
 
@@ -76,6 +79,8 @@ iplot_abundance <- function (data,
   if(class(export.plot) != "logical") stop ("Please include only logical values for export.plot argument")
 
   if(export.format != "pdf" & export.format != "png") stop ("Please export.format only accept values: 'pdf' or 'png'")
+
+  if(class(exclude) != "character" & !is.null(exclude)) stop ("Please include only character values for exclude argument indicating the pollen type to be excluded")
 
   if(class(data[,1])[1]!="Date" & !is.POSIXt(data[,1])) {stop("Please the first column of your data must be the date in 'Date' format")}
   data[,1]<-as.Date(data[,1])
@@ -120,6 +125,9 @@ mean.perc <- data.frame(types = colnames(perc.df),
         sd = apply(perc.df, 2, FUN = function(x) sd(x, na.rm=T)))
 
 mean.perc$types <- factor(mean.perc$types, levels = mean.perc$types[order(mean.perc$mean)])
+
+if (!is.null(exclude)){
+  mean.perc<-mean.perc[!(as.character(mean.perc$types)%in%exclude),]}
 
 plot.abundance <- ggplot(mean.perc, aes(x = types, y = mean)) +
   geom_bar(stat = "identity", position = position_dodge(), color = "black", fill = col.bar) +

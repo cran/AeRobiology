@@ -36,7 +36,7 @@ This function returns plot of class \pkg{ggplot2}. User are able to customize th
 Function to plot the pollen data during several seasons. Also plots the averaged pollen season over the study period. It is possible to plot the relative abundance per day and smoothing the pollen season by calculating a moving average.
 }
 \details{
-This function allows to summarize the pollen season by a simple plot. Even though the package was originally designed to treat aerpalinological data, it can be used to study many other atmospheric components (e.g., bacteria in the air, fungi, insects ...) \emph{(Buters et al., 2018; Oteros et al., 2019)}.
+This function allows to summarize the pollen season by a simple plot. Even though the package was originally designed to treat aeropalynological data, it can be used to study many other atmospheric components (e.g., bacteria in the air, fungi, insects ...) \emph{(Buters et al., 2018; Oteros et al., 2019)}.
 }
 \examples{
  data("munich")

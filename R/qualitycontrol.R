@@ -25,8 +25,7 @@
 #'@param type See \code{\link{calculate_ps}} for more details.
 #'@param int.method See \code{\link{calculate_ps}} for more details.
 #'@param ... Other arguments passed on to the pollen season calculation as specified in \code{\link{calculate_ps}} function.
-#'@details \code{qualitycontrol} function checks the quality of the pollen data of each pollen type and season. The filters applied by the function are: \cr
-#' Quality control is a relevant topic for aerobiology (Oteros et al., 2013). This function is another approach to improve the quality control management in the field. \cr
+#'@details Quality control is a relevant topic for aerobiology (Oteros et al., 2013). This function is another approach to improve the quality control management in the field. \cr\code{qualitycontrol} function checks the quality of the pollen data of each pollen type and season. The filters applied by the function are: \cr
 #'\itemize{
 #'\item If the main pollen season (Galan et al., 2017) cannot be calculated according to \code{\link{calculate_ps}} function minimal requirements (lack of data for these pollen type and year). Filter named \code{"Complete"} in the \code{"QualityControl"} \code{data.frame}.
 #'\item If the start, end or peak date of the main pollen season has been interpolated or a day near to it (number of days specified by \code{int.window} argument). If a day near to these dates is missing, the selected date could not be the right one. Filters named \code{"Start"}, \code{"Peak"} and \code{"End"} in the \code{"QualityControl"} \code{data.frame}.

@@ -35,7 +35,7 @@ ps_plot(data, pollen.type = NULL, year = NULL, export.plot = TRUE,
 \item{...}{Other arguments passed on to the pollen season calculation as specified in \code{\link{calculate_ps}} function.}
 }
 \value{
-The gunction returns an object of class \code{\link[ggplot2]{ggplot}} with a graphical representation of the main pollen season of the selected pollen type. The pre_peak and post_peak periods are marked with different color intensity. If \code{export.plot = TRUE}, the graph will be exported into \emph{"plot_AeRobiology"} folder (created in the working directory). The extension of the file will be the specified by \code{export.format} argument.
+The function returns an object of class \code{\link[ggplot2]{ggplot}} with a graphical representation of the main pollen season of the selected pollen type. The pre_peak and post_peak periods are marked with different color intensity. If \code{export.plot = TRUE}, the graph will be exported into \emph{"plot_AeRobiology"} folder (created in the working directory). The extension of the file will be the specified by \code{export.format} argument.
 }
 \description{
 Function to plot the main pollen season of a single pollen type.

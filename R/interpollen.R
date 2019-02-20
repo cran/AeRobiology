@@ -478,5 +478,5 @@ interpollen <-
     Interpolated<<-DataINTER
     DataINTER2<-dcast(DataINTER[,1:3], Date~Type, value.var = "Pollen")
     return(DataINTER2)
-  }}
+    }}
 
