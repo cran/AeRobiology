@@ -9,7 +9,7 @@
 #' @param export.format A \code{character} string specifying the format selected to save the plot. The implemented formats that may be used are: \code{"pdf"} or \code{"png"}. By default, \code{export.format = "pdf"}.
 #' @param export.result A \code{logical} value. If \code{export.result = TRUE}, a table is exported with the extension \emph{.xlsx}, in the directory \emph{table_AeRobiology}. This table has the information about the \code{slope} \emph{"beta coefficient of a lineal model using as predictor the year and as dependent variable one of the main pollen season indexes"}. The information is referred to the main pollen season indexes: \emph{Start Date}, \emph{Peak Date}, \emph{End Date} and \emph{Pollen Integral}.
 #' @param method A \code{character} string specifying the method applied to calculate the pollen season and the main seasonal parameters. The implemented methods that can be used are: \code{"percentage"}, \code{"logistic"}, \code{"moving"}, \code{"clinical"} or \code{"grains"}. By default, \code{method = "percentage"} (\code{perc = 95}\%). A more detailed information about the different methods for defining the pollen season may be consulted in the function \code{\link{calculate_ps}}.
-#' @param quantil A \code{numeric} value (between 0 and 1) indicating the quantile of data to be displayed in the graphical output of the function. \code{quantil = 1} would show all the values, however a lower quantile will exclude the most extreme values of the sample. To split the parameters using a different sampling units (e.g. dates and pollen concentrations) can be used low vs high values of \code{quantil} argument (e.g. 0.5 vs 1). Also can be used an extra argument: \code{split}. By default, \code{quantil = 0.75}.
+#' @param quantil A \code{numeric} value (between 0 and 1) indicating the quantile of data to be displayed in the graphical output of the function. \code{quantil = 1} would show all the values, however a lower quantile will exclude the most extreme values of the sample. To split the parameters using a different sampling units (e.g. dates and pollen concentrations) can be used low vs high values of \code{quantil} argument (e.g. 0.5 vs 1). Also can be used an extra argument: \code{split}. By default, \code{quantil = 0.75}. \code{quantil} argument can only be applyed when \code{split = FALSE}.
 #' @param significant A \code{numeric} value indicating the significant level to be considered in the linear trends analysis. This \emph{p} level is displayed in the graphical output of the function. By default, \code{significant = 0.05}.
 #' @param split A \code{logical} argument. If \code{split = TRUE}, the plot is separated in two according to the nature of the variables (i.e. dates or pollen concentrations). By default, \code{split = TRUE}.
 #' @param ... Additional arguments for the function \code{\link{calculate_ps}} are also accepted.
@@ -135,9 +135,10 @@ trendtime$variable<-as.factor(trendtime$variable)
   trendtime2<-trendtime2[complete.cases(trendtime2),]
   sig<-paste("Significant (p<",significant,")", sep="")
   trendtime2$significant<-sig
-  trendtime2[which(trendtime2$p<=0.05),"significant"]<-sig
-  trendtime2[which(trendtime2$p>0.05),"significant"]<-"Non Significant"
-  trendtime2[which(trendtime2$p>0.05),"p"]<-0.99
+  #trendtime2[which(trendtime2$p<=significant),"significant"]<-sig
+  trendtime2[which(trendtime2$p>significant),"significant"]<-"Non Significant"
+  trendtime2[which(trendtime2$p>significant),"p"]<-0.99
+  trendtime2[which(trendtime2$p!=0.99),"p"]<-0.01
 
  trend_p1 <- ggplot(trendtime2, aes(x=coef, y=type))+
    theme_bw()+

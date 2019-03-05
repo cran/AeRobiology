@@ -1,6 +1,14 @@
 # AeRobiology 1.0 
 
-## Changes in version AeRobiology 1.0.2 
+## Changes in AeRobiology version 1.0.3
+
+Import the packages: *purrr*, *colorspace* and *httpuv*
+
+Function trend_plot() updated with extra information and better visualization of "significant" argument.
+
+Change the "maintainer" to only one of the authors, maintainer role will rotate among the authors.
+
+## Changes in AeRobiology version 1.0.2 
 
 The changes in specific functions are entitled as updates.function() 
 

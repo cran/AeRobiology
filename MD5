@@ -1,6 +1,6 @@
-71ff68472a50720582aa6e7b59764ab9 *DESCRIPTION
+69a4f25b5c8b2a6481dd80306998b3af *DESCRIPTION
 bbed247c21e7bd4d41bc5dc526dca061 *NAMESPACE
-d305893248b5f98862c301643ad75add *NEWS.md
+74e98b49986ee41c000d7075cc40ea3e *NEWS.md
 ae1a95f4505950d12e920d9263901dfe *R/AeRobiology.R
 0b8fc8aad3adabf87c9dc8556525807b *R/calculate_ps.R
 6cb7db3f0f8938896f58a0ab01745b7d *R/credits.R
@@ -16,7 +16,7 @@ d2008dd91a663ccb54f0482bf1cf1f48 *R/ps_plot.R
 ba0603c5fe02a332ae2c4fae5c0979f9 *R/qualitycontrol.R
 8e2d68e1a7b6d07fe17e4ac4332e5f8d *R/summary_normplot.R
 d841546115ac4d4c16047302a83b64aa *R/summary_plot.R
-97f7e1ceaa77a15ca951a8084c7bee44 *R/trend_plot.R
+9adcc8fdb92f9c25c545a6e62566d1c0 *R/trend_plot.R
 c4189745824f4d71c18ee9e615f067b4 *R/trends.R
 a0f9921c8f611780d324cb864fc529d1 *data/munich.rda
 a81114feddba0fbb5cfe0d9002533702 *man/AeRobiology.Rd
@@ -34,5 +34,5 @@ f405919a703c5270f699da022ada5167 *man/iplot_pollen.Rd
 fe660e61d3cb77dbf6d9e8e9e09318db *man/qualitycontrol.Rd
 3f2d7840b37f8f2ee76f48be8eb4ecfb *man/summary_normplot.Rd
 3a1f0cc5dc74521218fa9df2be35d380 *man/summary_plot.Rd
-1f80d556a00dc1cf0753d97fbdc50ec5 *man/trend_plot.Rd
+4a6750dd9a67e81c876e7fe69490bca7 *man/trend_plot.Rd
 2d5742aeb323b3f6e08c098356c05790 *man/trends.Rd
