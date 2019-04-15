@@ -11,6 +11,7 @@
 #' @param spar A \code{numeric (double)} value ranging \code{0_1} specifying the degree of smoothness of the spline regression adjustment. As smooth as the adjustment is, more data are considered as outliers for the spline regression. Only valid if the \code{"spline"} method is chosen. The argument \code{"spar"} will be \code{0.5} by default.
 #' @param data2,data3,data4,data5 A \code{data.frame} object (each one) including database of a neighbour pollen station which will be used to interpolate missing data in the target station. Only valid if the "neighbour" method is chosen. This \code{data.frame} must include a first column in \code{Date} format and the rest of columns in \code{numeric} format belonging to each pollen type by column. It is not necessary to insert the missing gaps; the function will automatically detect them. The arguments will be \code{NULL} by default.
 #' @param mincorr A \code{numeric (double)} value ranging \code{0_1}. It specifies the minimal correlation coefficient (Spearman correlations) that neighbour stations must have with the target station to be taken into account for the interpolation. Only valid if the \code{"neighbour"} method is chosen. The argument \code{"mincorr"} will be \code{0.6} by default.
+#' @param result A \code{character} string specifying the format of the resulting \code{data.frame}. Only \code{"wide"} or \code{"long"}. The \code{result} argument will be \code{"wide"} by default.
 #' @details This function allows to interpolate missing data in a pollen database using 4 different methods which are described below. Interpolation for each pollen type will be automatically done for gaps smaller than the \code{"maxdays"} argument. \cr
 #' \itemize{
 #' \item \code{"lineal"} method. The interpolation will be carried out by tracing a straight line between the gap extremes.
@@ -21,20 +22,19 @@
 #' }
 #' @return This function returns different results:
 #' \itemize{
-#' \item \code{data.frame} including the original data and completed with the interpolated data.
-#' \item \code{data.frame}  named \code{"Interpolated"} in long format (the first column for date, the second for pollen type, the third for concentration and an additional fourth column with \code{1} if this data has been interpolated and \code{0} if not.
+#' \item If \code{result = "wide"}, returns a \code{data.frame} including the original data and completed with the interpolated data.
+#' \item If \code{result = "long"}, returns a \code{data.frame} containing your data in long format (the first column for date, the second for pollen type, the third for concentration and an additional fourth column with \code{1} if this data has been interpolated or \code{0} if not).
 #' \item If \code{plot = TRUE}, plots for each year and pollen type with daily values are represented in the active graphic window. Interpolated values are marked in red. If \code{method} argument is \code{"tseries"}, the seasonality is also represented in grey.
 #' }
 #' @references Cleveland RB, Cleveland WS, McRae JE, Terpenning I (1990) STL: a seasonal_trend decomposition procedure based on loess. J Off Stat 6(1):3_33.
 #' @seealso \code{\link{ma}}
-#' @examples data("munich")
-#' @examples interpollen(munich, method = "lineal", plot = FALSE)
-#' @importFrom reshape2 dcast melt
+#' @examples data("munich_pollen")
+#' @examples interpollen(munich_pollen, method = "lineal", plot = FALSE)
 #' @importFrom lubridate is.POSIXt
 #' @importFrom graphics legend lines par plot points
 #' @importFrom stats aggregate cor.test lm na.omit predict predict.lm smooth.spline stl ts window
 #' @importFrom zoo na.approx
-#' @importFrom tidyr %>%
+#' @importFrom tidyr %>% gather spread
 #' @export
 interpollen <-
   function(data,
@@ -48,7 +48,8 @@ interpollen <-
            data3=NULL,
            data4=NULL,
            data5=NULL,
-           mincorr=0.6) {
+           mincorr=0.6,
+           result="wide") {
     if(class(maxdays)!="numeric"){stop("maxday: Please, insert an entire number bigger than 1")}
     if(class(maxdays)!="numeric"| maxdays%%1!=0| maxdays<=0){stop("maxday: Please insert an entire number bigger than 1")}
     if(class(method)!="character"){stop("method: Please, only type 'lineal' , 'movingmean' or 'spline'")}
@@ -56,6 +57,9 @@ interpollen <-
         method != "movingmean" &
         method != "spline" & method != "neighbour" & method != "tseries"){
       stop("method: Please, only type 'lineal' , 'movingmean', 'spline', 'tseries' or 'neighbour'")}
+    if (result != "wide" &
+        result != "long"){
+      stop("result: Please, only type 'wide' or 'long'")}
     if (plot != TRUE &
         plot != FALSE){
       stop("plot: Please, only type 'TRUE' or 'FALSE'")}
@@ -74,6 +78,7 @@ interpollen <-
       warning("WARNING: Results of spline may not be reliable with more than 15 days")}
     if(mincorr<0 | mincorr>1){stop("mincorr: Please insert only a number between 0 and 1 ")}
 
+    data<-data.frame(data)
     if (class(data) != "data.frame"& !is.null(data)){
       stop ("Please, include a data.frame: first column with date, and the rest with pollen types")}
     if (class(data2) != "data.frame" & !is.null(data2)){
@@ -164,26 +169,21 @@ interpollen <-
           lines(pollen.sel$pollen, type = "l", col = 1, lwd = 2)
           legend("topleft", legend = c("original data", "interpolation", "seasonality"), col = c("black", "red", "gray"), pch = 19, cex = 0.8, bty = "n")
         }}
-        print(paste("Interpolating:", type.name[cols]))
-
       }
 
-      Interpolated <- melt(data.full, id.vars = colnames(data.full)[1],
-                           measure.vars = colnames(data.full)[-1],
-                           variable.name = "type",
-                           value.name = "pollen")
+      Interpolated <- gather(data.full, "type", "pollen", colnames(data.full)[-1], factor_key = TRUE)
+      Non.interpolated <- gather (data, "type", "pollen", colnames(data.full)[-1], factor_key = TRUE)
 
-      Non.interpolated <- melt(data, id.vars = colnames(data.full)[1],
-                               measure.vars = colnames(data.full)[-1],
-                               variable.name = "type",
-                               value.name = "pollen")
 
       Interpolated$Interpolated <- 1
       Interpolated$Interpolated[which(Interpolated$pollen == Non.interpolated$pollen)] <- 0
       colnames(Interpolated) <- c("Date", "Type", "Pollen", "Interpolated")
-      Interpolated <<- Interpolated
-
-      return(data.full)
+      if(result=="long"){
+        return(Interpolated)
+        print(paste(
+          "Process completed: If the data has been interpolated it is marked with 1"
+        ))
+      }else{return(data.full)}
 
     }else{
 
@@ -194,14 +194,7 @@ interpollen <-
       Nombres <- colnames(Dataf)
       idvariables <- Nombres[1]
       Tipos <- Nombres[2:cols]
-      Result <-
-        melt(
-          Dataf,
-          id.vars = idvariables,
-          measure.vars = Tipos,
-          variable.name = "Type",
-          value.name = "Pollen"
-        )
+      Result <- gather(Dataf, "Type", "Pollen", Tipos, factor_key = TRUE)
       return(Result)
     }
 
@@ -332,25 +325,26 @@ interpollen <-
                 colnames(emptiness)<-colnames(mother)[1]
                 motherframe<-merge(emptiness, mother, by.x=c(colnames(emptiness)[1]), all.x = TRUE)
                 data2[,1]<-as.Date(data2[,1])
-                colnames(data2)[1]<-"date"
-                neighbours<-merge(motherframe, data2[,c("date",Active_Pollen)], by= colnames(Datatemp)[1], all.x=T)
+                colnames(data2)[1]<-colnames(data)[1]
+                nameneigh<-colnames(data)[1]
+                neighbours<-merge(motherframe, data2[,c(nameneigh,Active_Pollen)], by= colnames(Datatemp)[1], all.x=T)
                 colnames(neighbours)<-c(colnames(neighbours)[1], "station1", "station2")
                 if(!is.null(data3)){
                   data3[,1]<-as.Date(data3[,1])
-                  colnames(data3)[1]<-"date"
-                  neighbours<-merge(neighbours, data3[,c("date", Active_Pollen)], by= colnames(Datatemp)[1], all.x=T)
+                  colnames(data3)[1]<-colnames(data)[1]
+                  neighbours<-merge(neighbours, data3[,c(nameneigh, Active_Pollen)], by= colnames(Datatemp)[1], all.x=T)
                   colnames(neighbours)<-c(colnames(neighbours)[1], "station1", "station2", "station3")
                 }
                 if(!is.null(data4)){
                   data4[,1]<-as.Date(data4[,1])
-                  colnames(data4)[1]<-"date"
-                  neighbours<-merge(neighbours, data4[,c("date", Active_Pollen)], by= colnames(Datatemp)[1], all.x=T)
+                  colnames(data4)[1]<-colnames(data)[1]
+                  neighbours<-merge(neighbours, data4[,c(nameneigh, Active_Pollen)], by= colnames(Datatemp)[1], all.x=T)
                   colnames(neighbours)<-c(colnames(neighbours)[1], "station1", "station2", "station3", "station4")
                 }
                 if(!is.null(data5)){
                   data5[,1]<-as.Date(data5[,1])
-                  colnames(data5)[1]<-"date"
-                  neighbours<-merge(neighbours, data5[,c("date",Active_Pollen)], by= colnames(Datatemp)[1], all.x=T)
+                  colnames(data5)[1]<-colnames(data)[1]
+                  neighbours<-merge(neighbours, data5[,c(nameneigh,Active_Pollen)], by= colnames(Datatemp)[1], all.x=T)
                   colnames(neighbours)<-c(colnames(neighbours)[1], "station1", "station2", "station3", "station4", "station5")
                 }
                 neighbourscomplete<-neighbours#Guardo una copia de los datos sin filtrar
@@ -449,7 +443,6 @@ interpollen <-
         }
 
       }
-      print(paste("Interpolating:", Active_Pollen))
     }
     colnames(RawData) <- c("Date", "Type", "Pollen", "Interpolated")
     RawData <- RawData[order(RawData$Type, RawData$Date), ]
@@ -470,13 +463,15 @@ interpollen <-
             RawData,
             by.x = c(colnames(RawData)[1], colnames(RawData)[2]),
             all = TRUE)
-    print(paste(
-      "Process completed: If the data is interpolated it is marked with 1 in 'Interpolated' dataframe"
-    ))
     if (Warning == TRUE){
       warning (paste("WARNING: Gaps with more than", maxdays, "missing data have not been interpolated"))}
-    Interpolated<<-DataINTER
-    DataINTER2<-dcast(DataINTER[,1:3], Date~Type, value.var = "Pollen")
-    return(DataINTER2)
+    if(result=="long"){
+    return(DataINTER)
+      print(paste(
+        "Process completed: If the data has been interpolated it is marked with 1"
+      ))
+    }else{
+      DataINTER2<-spread(DataINTER[,1:3], "Type", "Pollen")
+      return(DataINTER2)}
     }}
 

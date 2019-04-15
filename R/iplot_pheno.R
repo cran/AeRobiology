@@ -41,15 +41,15 @@
 #' @references Pfaar, O., Bastl, K., Berger, U., Buters, J., Calderon, M.A., Clot, B., Darsow, U., Demoly, P., Durham, S.R., Galan, C., Gehrig, R., Gerth van Wijk, R., Jacobsen, L., Klimek, L., Sofiev, M., Thibaudon, M. and Bergmann, K.C., 2017. Defining pollen exposure times for clinical trials of allergen immunotherapy for pollen_induced rhinoconjunctivitis_an EAACI position paper. \emph{Allergy}, 72(5), pp.713_722.
 #' @references Ribeiro, H., Cunha, M. and Abreu, I., 2007. Definition of main pollen season using logistic model. \emph{Annals of Agricultural and Environmental Medicine}, 14(2), pp.259_264.
 #' @seealso \code{\link{calculate_ps}}, \code{\link{interpollen}}
-#' @examples data("munich")
-#' @examples iplot_pheno (munich, interpolation = FALSE)
+#' @examples data("munich_pollen")
+#' @examples iplot_pheno (munich_pollen, interpolation = FALSE)
 #' @importFrom plotly layout
 #' @importFrom ggplot2 aes coord_flip element_text geom_boxplot ggplot labs position_dodge scale_fill_manual scale_y_continuous theme theme_bw
 #' @importFrom graphics plot
 #' @importFrom grDevices dev.off pdf png
 #' @importFrom lubridate is.POSIXt
 #' @importFrom plotly ggplotly
-#' @importFrom plyr ddply
+#' @importFrom dplyr group_by summarise_all
 #' @importFrom stats na.omit
 #' @importFrom utils data
 #' @importFrom tidyr %>%
@@ -81,6 +81,7 @@ iplot_pheno <- function(data,
 
   if(export.plot == TRUE){ifelse(!dir.exists(file.path("plot_AeRobiology")), dir.create(file.path("plot_AeRobiology")), FALSE)}
 
+  data<-data.frame(data)
   if(class(data) != "data.frame") stop ("Please include a data.frame: first column with date, and the rest with pollen types")
 
   if(method != "percentage" & method != "logistic" & method != "moving" & method != "clinical" & method != "grains") stop ("Please method only accept values: 'percentage', 'logistic', 'moving', 'clinical' or 'grains'")
@@ -134,7 +135,13 @@ options(warn = -1)
 
 data <- data.frame(date = data[ ,1], year = as.numeric(strftime(data[ ,1], "%Y")), data[ ,-1])
 
-types <- ddply(data[ ,-1], "year", function(x) colSums(x[-1], na.rm = T)) [-1] %>%
+#types <- ddply(data[ ,-1], "year", function(x) colSums(x[-1], na.rm = T)) [-1] %>%
+  #apply(., 2, function(x) mean(x, na.rm = T)) %>% .[order(., decreasing = TRUE)] %>%
+  #names(.) %>%
+  #.[1:n.types]
+types <- data.frame(data[ ,-1] %>%
+                      group_by(year) %>%
+                      summarise_all(sum, na.rm = TRUE))[-1] %>%
   apply(., 2, function(x) mean(x, na.rm = T)) %>% .[order(., decreasing = TRUE)] %>%
   names(.) %>%
   .[1:n.types]
@@ -143,7 +150,7 @@ data <- data[ ,which(colnames(data) %in% c("date", types))]
 
 #############################################    CALCULATION OF THE POLLEN SEASON       #############################
 
-calculate_ps(data = data, method = method, th.day = th.day, perc = perc, def.season = def.season, reduction = reduction, red.level = red.level, derivative = derivative, man = man, th.ma = th.ma, n.clinical = n.clinical, window.clinical = window.clinical, window.grains = window.grains, th.pollen = th.pollen, th.sum = th.sum, type = type, interpolation = interpolation, int.method = int.method, plot = FALSE, export.result = FALSE)
+list.ps <- calculate_ps(data = data, method = method, th.day = th.day, perc = perc, def.season = def.season, reduction = reduction, red.level = red.level, derivative = derivative, man = man, th.ma = th.ma, n.clinical = n.clinical, window.clinical = window.clinical, window.grains = window.grains, th.pollen = th.pollen, th.sum = th.sum, type = type, interpolation = interpolation, int.method = int.method, result = "list", plot = FALSE, export.plot = FALSE, export.result = FALSE)
 
 season.data <- list.ps
 type.name <- colnames(data)[-1]

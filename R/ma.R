@@ -6,8 +6,8 @@
 #' @param man An \code{integer} value specifying the order of the moving average applied to the data. By default, \code{man = 10}.
 #' @param warnings A \code{logical} value specifying the show of warning messages. By default, \code{warnings = FALSE}.
 #' @return This function returns a vector with the moving average of the input data.
-#' @examples data("munich")
-#' @examples ma(data = munich$Betula, man = 10, warnings = FALSE)
+#' @examples data("munich_pollen")
+#' @examples ma(data = munich_pollen$Betula, man = 10, warnings = FALSE)
 #' @export
 ma <- function(data, man = 10, warnings = FALSE) {
   if (man %% 2 == 0) {

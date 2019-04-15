@@ -8,15 +8,15 @@
 #' @param normalized A \code{logical} value specifying if the visualization shows real pollen data (\code{normalized = FALSE}) or the percentage of every day over the whole pollen season (\code{normalized = TRUE}). By default, \code{normalized = FALSE}.
 #' @param interpolation A \code{logical} value specifying if the visualization shows the gaps in the inputs data (\code{interpolation = FALSE}) or if an interpolation method is used for filling the gaps (\code{interpolation = TRUE}). By default, \code{interpolation = TRUE}.
 #' @param int.method A \code{character} string with the name of the interpolation method to be used. The implemented methods that may be used are: \code{"lineal"}, \code{"movingmean"}, \code{"tseries"} or \code{"spline"}. By default, \code{int.method = "lineal"}.
-#' @param export.plot A \code{logical} value specifying if a plot will be exported or not. If \code{FALSE} graphical results will only be displayed in the active graphics window. If \code{TRUE} graphical results will be displayed in the active graphics window and also one pdf/png file will be saved within the \emph{plot_AeRobiology} directory automatically created in the working directory. By default, \code{export.plot = TRUE}.
+#' @param export.plot A \code{logical} value specifying if a plot will be exported or not. If \code{FALSE} graphical results will only be displayed in the active graphics window. If \code{TRUE} graphical results will be displayed in the active graphics window and also one pdf/png file will be saved within the \emph{plot_AeRobiology} directory automatically created in the working directory. By default, \code{export.plot = FALSE}.
 #' @param export.format A \code{character} string specifying the format selected to save the plot. The implemented formats that may be used are: \code{"pdf"} or \code{"png"}. By default, \code{export.format = "pdf"}.
 #' @param axisname A \code{character} string specifying the title of the y axis. By default, \code{axisname =  "Pollen grains / m3"}.
 #' @param color.plot A \code{character} string. The argument defines the color to fill the plot. Will be \code{"orange2"} by default.
 #' @param ... Other additional arguments may be used to customize the exportation of the plots using \code{"pdf"} or \code{"png"} files and therefore arguments from functions \code{\link[grDevices]{pdf}} and  \code{\link[grDevices]{png}} may be implemented. For example, for pdf files the user may custom the arguments: width, height, family, title, fonts, paper, bg, fg, pointsize...; and for png files the user may custom the arguments: width, height, units, pointsize, bg, res...
 #' @return This function returns plot of class \pkg{ggplot2}. User are able to customize the output as a \pkg{ggplot2} object.
-#' @seealso \code{\link{calculate_ps}}; \code{\link{summary_plot}}
-#' @examples data("munich")
-#' @examples summary_normplot(munich, pollen = "Betula", interpolation = FALSE, export.plot = FALSE)
+#' @seealso \code{\link{calculate_ps}}; \code{\link{plot_summary}}
+#' @examples data("munich_pollen")
+#' @examples plot_normsummary(munich_pollen, pollen = "Betula", interpolation = FALSE, export.plot = FALSE)
 #' @importFrom graphics plot
 #' @importFrom utils data
 #' @importFrom ggplot2 aes element_text geom_line geom_ribbon ggplot labs scale_colour_manual scale_x_date theme theme_classic
@@ -26,13 +26,13 @@
 #' @importFrom stats aggregate
 #' @importFrom tidyr %>%
 #' @export
-summary_normplot<-function (data,
+plot_normsummary<-function (data,
                         pollen,
                         mave=1,
                         normalized=FALSE,
                         interpolation = TRUE,
                         int.method = "lineal",
-                        export.plot = TRUE,
+                        export.plot = FALSE,
                         export.format = "pdf",
                         color.plot="orange2",
                         axisname="Pollen grains / m3",
@@ -43,7 +43,7 @@ summary_normplot<-function (data,
   #############################################    CHECK THE ARGUMENTS       #############################
 
   if(export.plot == TRUE){ifelse(!dir.exists(file.path("plot_AeRobiology")), dir.create(file.path("plot_AeRobiology")), FALSE)}
-
+  data<-data.frame(data)
   if(class(data) != "data.frame") stop ("Please include a data.frame: first column with date, and the rest with pollen types")
 
   if(class(pollen) != "character") stop ("Please include only character values for 'pollen'")
@@ -145,7 +145,7 @@ summary_normplot<-function (data,
 
 
   if(export.plot == TRUE  & export.format == "png") {
-    png(paste0("plot_AeRobiology/summary_normplot_", pollen,".png"), ...)
+    png(paste0("plot_AeRobiology/plot_normsummary_", pollen,".png"), ...)
     plot(plot.summary.norm)
     dev.off()
     png(paste0("plot_AeRobiology/credits.png"))
@@ -154,7 +154,7 @@ summary_normplot<-function (data,
   }
 
   if(export.plot == TRUE  & export.format == "pdf") {
-    pdf(paste0("plot_AeRobiology/summary_normplot_", pollen,".pdf"), ...)
+    pdf(paste0("plot_AeRobiology/plot_normsummary_", pollen,".pdf"), ...)
     plot(plot.summary.norm)
 
     dev.off()

@@ -20,6 +20,6 @@ This function returns a vector with the moving average of the input data.
 Function to calculate the moving average of a given numeric vector. The order of the moving average may be customized by the user (\code{man} argument).
 }
 \examples{
-data("munich")
-ma(data = munich$Betula, man = 10, warnings = FALSE)
+data("munich_pollen")
+ma(data = munich_pollen$Betula, man = 10, warnings = FALSE)
 }

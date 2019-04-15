@@ -18,8 +18,8 @@ An interactive plot of the class \pkg{ggvis}.
 Function to plot the pollen data of a pollen type during several seasons. The plots are fully interactive.
 }
 \examples{
-data("munich")
-iplot_years(data = munich, pollen = "Betula")
+data("munich_pollen")
+iplot_years(data = munich_pollen, pollen = "Betula")
 }
 \seealso{
 \code{\link{iplot_pollen}}

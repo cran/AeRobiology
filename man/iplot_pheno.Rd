@@ -74,8 +74,8 @@ This function allows to calculate the pollen season using five different methods
 Pollen time series frequently have different gaps with no data and this fact could be a problem for the calculation of specific methods for defining the pollen season even providing incorrect results. In this sense by default a linear interpolation will be carried out to complete these gaps before to define the pollen season (\code{interpolation = TRUE}). Additionally, the users may select other interpolation methods using the \code{int.method} argument, as \code{"lineal"}, \code{"movingmean"}, \code{"spline"} or \code{"tseries"}. For more information to see the \code{\link{interpollen}} function.
 }
 \examples{
-data("munich")
-iplot_pheno (munich, interpolation = FALSE)
+data("munich_pollen")
+iplot_pheno (munich_pollen, interpolation = FALSE)
 }
 \references{
 Andersen, T.B., 1991. A model to predict the beginning of the pollen season. \emph{Grana}, 30(1), pp.269_275.

@@ -6,16 +6,17 @@
 #' @param pollen A \code{character} string with the name of the particle to show. This \code{character} must match with the name of a column in the input database. This is a mandatory argument.
 #' @return An interactive plot of the class \pkg{ggvis}.
 #' @seealso \code{\link{iplot_pollen}}
-#' @examples data("munich")
-#' @examples iplot_years(data = munich, pollen = "Betula")
+#' @examples data("munich_pollen")
+#' @examples iplot_years(data = munich_pollen, pollen = "Betula")
 #' @importFrom dplyr filter
 #' @importFrom ggvis add_axis axis_props ggvis input_checkboxgroup input_slider layer_lines layer_points scale_numeric %>%
 #' @importFrom lubridate is.POSIXt yday year
-#' @importFrom reshape2 melt
+#' @importFrom tidyr gather
 #' @importFrom stats complete.cases
 #' @export
 iplot_years<-function(data, pollen){
 
+  data<-data.frame(data)
   if(class(data) != "data.frame") stop ("Please include a data.frame: first column with date, and the rest with pollen types")
 
   if(class(pollen) != "character") stop ("Please include only character values for 'pollen' (including only pollen types in your database)")
@@ -24,11 +25,11 @@ iplot_years<-function(data, pollen){
   colnames(data)[1]<-"date"
 
 datalong <-
-  melt(
+  gather(
     data,
-    varying = colnames(data[2:length(data)]),
-    direction = "long",
-    id.vars = colnames(data[1])
+    colnames(data[2:length(data)]),
+    key = "variable",
+    value = "value"
   )
 
 

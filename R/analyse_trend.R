@@ -12,10 +12,12 @@
 #' @param quantil A \code{numeric} value (between 0 and 1) indicating the quantile of data to be displayed in the graphical output of the function. \code{quantil = 1} would show all the values, however a lower quantile will exclude the most extreme values of the sample. To split the parameters using a different sampling units (e.g. dates and pollen concentrations) can be used low vs high values of \code{quantil} argument (e.g. 0.5 vs 1). Also can be used an extra argument: \code{split}. By default, \code{quantil = 0.75}. \code{quantil} argument can only be applyed when \code{split = FALSE}.
 #' @param significant A \code{numeric} value indicating the significant level to be considered in the linear trends analysis. This \emph{p} level is displayed in the graphical output of the function. By default, \code{significant = 0.05}.
 #' @param split A \code{logical} argument. If \code{split = TRUE}, the plot is separated in two according to the nature of the variables (i.e. dates or pollen concentrations). By default, \code{split = TRUE}.
+#'@param result A \code{character} object with the definition of the object to be produced by the function. If \code{result == "plot"}, the function returns a list of objects of class \pkg{ggplot2}; if \code{result == "table"}, the function returns a \pkg{data.frame}. By default, \code{result = "table"}.
 #' @param ... Additional arguments for the function \code{\link{calculate_ps}} are also accepted.
 #' @details This function allows to study time series trends of the pollen season. Even though the package was originally designed to treat aeropalynological data, it can be used to study many other atmospheric components (e.g., bacteria in the air, fungi, insects ...) \emph{(Buters et al., 2018; Oteros et al., 2019)}. The study of trends in pollen time series is a common approach to study the impact of climate change or other environmental factors on vegetation (Galan et al., 2016; Garcia_Mozo et al., 2016;  Recio et al., 2018). This tool can also be useful for studying trends in other fields (Oteros et al., 2015).
-#' @return This function returns a plot of the class \pkg{ggplot2} or a list of plots of the class \pkg{ggplot2} (depending on the argument \code{split}). This is a combined dot plot showing the trends (\emph{slope} and \emph{p} value) of the main seasonal features.\cr
-#' Also produces an object of the class \code{data.frame} and export a table with the extension \emph{.xlsx}, in the directory \emph{table_AeRobiology}. These tables have the information about the \code{slope} \emph{(beta coefficient of a lineal model using as predictor the year and as dependent variable one of the main pollen season indexes)}. The information is referred to the main pollen season indexes: \emph{Start Date}, \emph{Peak Date}, \emph{End Date} and \emph{Pollen Integral}.
+#' @return If \code{result == "plot"}, the function returns a list of objects of class \pkg{ggplot2}; if \code{result == "table"}, the function returns a \pkg{data.frame} with the hourly patterns.
+#' The plot is of the class \pkg{ggplot2} or a list of plots of the class \pkg{ggplot2} (depending on the argument \code{split}). This is a combined dot plot showing the trends (\emph{slope} and \emph{p} value) of the main seasonal features.\cr
+#' The object of the class \code{data.frame} has the information about the \code{slope} \emph{(beta coefficient of a lineal model using as predictor the year and as dependent variable one of the main pollen season indexes)}. The information is referred to the main pollen season indexes: \emph{Start Date}, \emph{Peak Date}, \emph{End Date} and \emph{Pollen Integral}.
 #'
 #' @references Buters, J. T. M., Antunes, C., Galveias, A., Bergmann, K. C., Thibaudon, M., Galan, C., ... & Oteros, J. (2018). Pollen and spore monitoring in the world. \emph{Clinical and translational allergy}, 8(1), 9.
 #' @references Galan, C., Alcazar, P., Oteros, J., Garcia_Mozo, H., Aira, M. J., Belmonte, J., ... & Perez_Badia, R. (2016). Airborne pollen trends in the Iberian Peninsula. \emph{Science of the Total Environment}, 550, 53_59.
@@ -23,9 +25,9 @@
 #' @references Oteros, J., Garcia_Mozo, H., Botey, R., Mestre, A., & Galan, C. (2015). Variations in cereal crop phenology in Spain over the last twenty_six years (1986_2012). \emph{Climatic Change}, 130(4), 545_558.
 #' @references Oteros, J., Bartusel, E., Alessandrini, F., Nunez, A., Moreno, D. A., Behrendt, H., ... & Buters, J. (2019). Artemisia pollen is the main vector for airborne endotoxin. \emph{Journal of Allergy and Clinical Immunology}.
 #' @references Recio, M., Picornell, A., Trigo, M. M., Gharbi, D., Garcia_Sanchez, J., & Cabezudo, B. (2018). Intensity and temporality of airborne Quercus pollen in the southwest Mediterranean area: Correlation with meteorological and phenoclimatic variables, trends and possible adaptation to climate change. \emph{Agricultural and Forest Meteorology}, 250, 308_318.
-#' @seealso \code{\link{calculate_ps}}; \code{\link{trends}}
-#' @examples data("munich")
-#' @examples trend_plot(munich, interpolation = FALSE, export.result = FALSE, export.plot = FALSE)
+#' @seealso \code{\link{calculate_ps}}; \code{\link{plot_trend}}
+#' @examples data("munich_pollen")
+#' @examples analyse_trend(munich_pollen, interpolation = FALSE, export.result = FALSE, export.plot = FALSE)
 #' @importFrom graphics plot
 #' @importFrom utils data
 #' @importFrom ggplot2 aes element_blank element_text geom_point geom_vline ggplot guide_legend guides labs scale_colour_manual scale_fill_discrete scale_fill_gradientn scale_x_continuous theme theme_bw
@@ -36,7 +38,7 @@
 #' @importFrom writexl write_xlsx
 #' @importFrom tidyr %>%
 #' @export
-trend_plot  <-   function   (data,
+analyse_trend  <-   function   (data,
                             interpolation = TRUE,
                             int.method = "lineal",
                             export.plot = TRUE,
@@ -45,7 +47,7 @@ trend_plot  <-   function   (data,
                             method="percentage",
                             quantil=0.75,
                             significant=0.05,
-                            split=TRUE,
+                            split=TRUE, result="table",
                             ...){
 
   # Sys.setlocale(category = "LC_ALL", locale="english")
@@ -56,6 +58,7 @@ trend_plot  <-   function   (data,
 
   if(export.result == TRUE){ifelse(!dir.exists(file.path("table_AeRobiology")), dir.create(file.path("table_AeRobiology")), FALSE)}
 
+   data<-data.frame(data)
   if(class(data) != "data.frame") stop ("Please include a data.frame: first column with date, and the rest with pollen types")
 
   if(class(export.plot) != "logical") stop ("Please include only logical values for export.plot argument")
@@ -89,7 +92,7 @@ trend_plot  <-   function   (data,
     return(p)
   }
 
-  datafram<-calculate_ps(data,method=method, interpolation =  interpolation, int.method=int.method,...)
+  datafram<-calculate_ps(data,method=method, interpolation =  interpolation, int.method=int.method,plot=FALSE,...)
 
   variables<-c("st.jd","pk.jd","en.jd","sm.ps")
 
@@ -124,7 +127,7 @@ trend_plot  <-   function   (data,
 
 
 
-trendtime<<-trendtime
+trendtimeresult<-trendtime
 
 
 ### Now start the rock and roll
@@ -140,11 +143,20 @@ trendtime$variable<-as.factor(trendtime$variable)
   trendtime2[which(trendtime2$p>significant),"p"]<-0.99
   trendtime2[which(trendtime2$p!=0.99),"p"]<-0.01
 
- trend_p1 <- ggplot(trendtime2, aes(x=coef, y=type))+
+trendtime2$variable<-as.character(trendtime2$variable)
+
+trendtime2[which(trendtime2$variable=="st.jd"),"variable"]  <- "Start Date"
+trendtime2[which(trendtime2$variable=="pk.jd"),"variable"]  <- "Peak Date"
+trendtime2[which(trendtime2$variable=="en.jd"),"variable"]  <- "End Date"
+trendtime2[which(trendtime2$variable=="sm.ps"),"variable"]  <- "Total Pollen"
+
+trendtime2$variable<-as.factor(as.character(trendtime2$variable))
+
+trend_p1 <- ggplot(trendtime2, aes(x=coef, y=type))+
    theme_bw()+
    geom_vline(aes(xintercept=0), colour="red", linetype = "dashed", size=1)+
    geom_point(aes(fill=as.numeric(variable), colour=trendtime2$significant, stroke=2-trendtime2$p*2),size=6, alpha=0.9,shape=21)+
-   scale_fill_gradientn(colours = rainbow(6), labels=c("Start Date", "Peak Date", "End Date", "Total Pollen"))+
+   scale_fill_gradientn(colours = rainbow(6), labels = levels(trendtime2$variable))+
    scale_colour_manual(values = c("gray80","black"))+
    scale_x_continuous(limits=c(-quantile(abs(trendtime2$coef),quantil),quantile(abs(trendtime2$coef),quantil)))+
    labs(x= "slope", y="")+
@@ -152,7 +164,7 @@ trendtime$variable<-as.factor(trendtime$variable)
    theme(legend.position="top", legend.title = element_blank(), axis.text.y = element_text(face="italic"))
 
 
- filtertrend<-trendtime2[which(trendtime2$variable!="sm.ps"),]
+ filtertrend<-trendtime2[which(trendtime2$variable!="Total Pollen"),]
  filtertrend$variable<-as.factor(as.character(filtertrend$variable))
  filtertrend$type<-as.factor(as.character(filtertrend$type))
 
@@ -160,7 +172,6 @@ trendtime$variable<-as.factor(trendtime$variable)
    theme_bw()+
    geom_vline(aes(xintercept=0), colour="red", linetype = "dashed", size=1)+
    geom_point(aes(fill=filtertrend$variable, colour=filtertrend$significant, stroke=2-filtertrend$p*2),size=6, alpha=0.9,shape=21)+
-   scale_fill_discrete(labels=c("Start Date", "Peak Date", "End Date"))+
    scale_colour_manual(values = c("gray80","black"))+
    scale_x_continuous(limits=c(-max(abs(filtertrend$coef), na.rm=T),max(abs(filtertrend$coef), na.rm=T)))+
    labs(x= "slope", y="")+
@@ -168,7 +179,7 @@ trendtime$variable<-as.factor(trendtime$variable)
    theme(legend.position="top", legend.title = element_blank(), axis.text.y = element_text(face="italic"))
 
 
- filtertrend2<-trendtime2[which(trendtime2$variable=="sm.ps"),]
+ filtertrend2<-trendtime2[which(trendtime2$variable=="Total Pollen"),]
  filtertrend2$variable<-as.factor(as.character(filtertrend2$variable))
  filtertrend2$type<-as.factor(as.character(filtertrend2$type))
 
@@ -184,29 +195,29 @@ trendtime$variable<-as.factor(trendtime$variable)
 
 
  if (split == F){
-   trend_plot<-trend_p1
+   analyse_trend<-trend_p1
    if(export.plot == TRUE  & export.format == "png") {
-     png(paste0("plot_AeRobiology/trend_plot",".png"), ...)
-     plot(trend_plot)
+     png(paste0("plot_AeRobiology/analyse_trend",".png"), ...)
+     plot(analyse_trend)
      dev.off()
 
    }
 
    if(export.plot == TRUE  & export.format == "pdf") {
-     pdf(paste0("plot_AeRobiology/trend_plot", ".pdf"))
-     plot(trend_plot)
+     pdf(paste0("plot_AeRobiology/analyse_trend", ".pdf"))
+     plot(analyse_trend)
 
      dev.off()
    }
 
  }else{
-   trend_plot<-list()
-   trend_plot[[1]]<-trend_p2
-   trend_plot[[2]]<-trend_p3
+   analyse_trend<-list()
+   analyse_trend[[1]]<-trend_p2
+   analyse_trend[[2]]<-trend_p3
 
 
    if(export.plot == TRUE  & export.format == "png") {
-     png("plot_AeRobiology/trend_plot_split.png")
+     png("plot_AeRobiology/analyse_trend_split.png")
      pushViewport(viewport(layout=grid.layout(2,1)))
      vplayout<-function(x,y) viewport(layout.pos.row = x, layout.pos.col=y)
      print(trend_p2, vp = vplayout(1,1))
@@ -216,7 +227,7 @@ trendtime$variable<-as.factor(trendtime$variable)
    }
 
    if(export.plot == TRUE  & export.format == "pdf") {
-     pdf("plot_AeRobiology/trend_plot_split.pdf", ...)
+     pdf("plot_AeRobiology/analyse_trend_split.pdf", ...)
      pushViewport(viewport(layout=grid.layout(2,1)))
      vplayout<-function(x,y) viewport(layout.pos.row = x, layout.pos.col=y)
      print(trend_p2, vp = vplayout(1,1))
@@ -238,6 +249,9 @@ trendtime$variable<-as.factor(trendtime$variable)
    write_xlsx(lista, "table_AeRobiology/summary_of_trends.xlsx")
  }
 
-   return(trend_plot)
-
+ if (result=="table"){
+   return(trendtimeresult)
+ }else if (result=="plot"){
+   return(analyse_trend)
+ }
 }

@@ -9,8 +9,8 @@ calculate_ps(data, method = "percentage", th.day = 100, perc = 95,
   derivative = 5, man = 11, th.ma = 5, n.clinical = 5,
   window.clinical = 7, window.grains = 5, th.pollen = 10,
   th.sum = 100, type = "none", interpolation = TRUE,
-  int.method = "lineal", maxdays = 30, plot = FALSE,
-  export.result = TRUE)
+  int.method = "lineal", maxdays = 30, result = "table",
+  plot = TRUE, export.plot = FALSE, export.result = FALSE)
 }
 \arguments{
 \item{data}{A \code{data.frame} object including the general database where calculation of the pollen season must be applied. This \code{data.frame} must include a first column in \code{Date} format and the rest of columns in \code{numeric} format belonging to each pollen type by column.}
@@ -51,13 +51,17 @@ calculate_ps(data, method = "percentage", th.day = 100, perc = 95,
 
 \item{maxdays}{A \code{numeric} (\code{integer} value) specifying the maximum number of consecutive days with missing data that the algorithm is going to interpolate. If the gap is bigger than the argument value, the gap will not be interpolated. Not valid with \code{int.method = "tseries"}. The \code{maxdays} argument will be \code{30} by default.}
 
-\item{plot}{A \code{logical} value specifying if a set of plots based on the definition of the pollen season and saved in the working directory will be required or not. If \code{FALSE} graphical results will not be saved. If \code{TRUE} a \emph{pdf} file for each pollen type showing graphically the definition of the pollen season for each studied year will be saved within the \emph{plot_AeRobiology} directory created in the working directory. The \code{plot} argument will be \code{FALSE} by default.}
+\item{result}{A \code{character} string specifying the output for the function. The implemented outputs that may be obtained are: \code{"table"} and \code{"list"}. The argument \code{result} will be \code{"table"} by default.}
 
-\item{export.result}{A \code{logical} value specifying if a excel file including all parameters for the definition of the pollen season saved in the working directoty will be required or not. If \code{FALSE} the results will not exported. If \code{TRUE} the results will be exported as \emph{xlsx} file including all parameters calculated from the definition of the pollen season within the \emph{table_AeRobiology} directory created in the working directory. The \code{export.result} argument will be \code{TRUE} by default.}
+\item{plot}{A \code{logical} value specifying if a set of plots based on the definition of the pollen season will be shown in the plot history or not. If \code{FALSE} graphical results will not be shown. If \code{TRUE} a set of plots will be shown in the plot history. The \code{plot} argument will be \code{TRUE} by default.}
+
+\item{export.plot}{A \code{logical} value specifying if a set of plots based on the definition of the pollen season will be saved in the workspace. If \code{TRUE} a \emph{pdf} file for each pollen type showing graphically the definition of the pollen season for each studied year will be saved within the \emph{plot_AeRobiology} directory created in the working directory. The \code{plot} argument will be \code{FALSE} by default.}
+
+\item{export.result}{A \code{logical} value specifying if a excel file including all parameters for the definition of the pollen season saved in the working directoty will be required or not. If \code{FALSE} the results will not exported. If \code{TRUE} the results will be exported as \emph{xlsx} file including all parameters calculated from the definition of the pollen season within the \emph{table_AeRobiology} directory created in the working directory. The \code{export.result} argument will be \code{FALSE} by default.}
 }
 \value{
 This function returns different results:\cr
-\code{data.frame} including the main parameters of the pollen season with regard to phenology and pollen intensity as:
+\code{data.frame} when \code{result = "table"} including the main parameters of the pollen season with regard to phenology and pollen intensity as:
 \itemize{
    \item \strong{type}: pollen type
    \item \strong{seasons}: year of the beginning of the season
@@ -81,8 +85,10 @@ This function returns different results:\cr
    \item \strong{en.dt.hs}: end_date of the High pollen season (date, only for clinical method)
    \item \strong{en.jd.hs}: end_date of the High pollen season (day of the year, only for clinical method)
 }
+\code{list} when \code{result = "list"} including the main parameters of the pollen season, one pollen type by element
+\code{plots} when \code{plot = TRUE} showing graphically the definition of the pollen season for each studied year in the plot history.
 If \code{export.result = TRUE} this \code{data.frame} will also be exported as \emph{xlsx} file within the \emph{table_AeRobiology} directory created in the working directory. If \code{export.result = FALSE} the results will also be showed as list object named \code{list.ps}. \cr
-If \code{plot = TRUE} a \emph{pdf} file for each pollen type showing graphically the definition of the pollen season for each studied year will be saved within the \emph{plot_AeRobiology} directory created in the working directory.
+If \code{export.plot = TRUE} a \emph{pdf} file for each pollen type showing graphically the definition of the pollen season for each studied year will be saved within the \emph{plot_AeRobiology} directory created in the working directory.
 }
 \description{
 Function to calculate the main parameters of the pollen season with regard to phenology and pollen intensity from a historical database of several pollen types. The function can use the most common methods in the definition of the pollen season.
@@ -105,8 +111,8 @@ The pollen season of the species may occur during the natural year (Calendar yea
 Pollen time series frequently have different gaps with no data and this fact could be a problem for the calculation of specific methods for defining the pollen season even providing incorrect results. In this sense by default a linear interpolation will be carried out to complete these gaps before to define the pollen season (\code{interpolation = TRUE}). Additionally, the users may select other interpolation methods using the \code{int.method} argument, as \code{"lineal"}, \code{"movingmean"}, \code{"spline"} or \code{"tseries"}. For more information to see the \code{\link{interpollen}} function.
 }
 \examples{
-data("munich")
-calculate_ps(munich, plot = FALSE, export.result = FALSE)
+data("munich_pollen")
+calculate_ps(munich_pollen, plot = TRUE, result = "table")
 }
 \references{
 Andersen, T.B., 1991. A model to predict the beginning of the pollen season. \emph{Grana}, 30(1), pp.269_275.
@@ -122,5 +128,5 @@ Pfaar, O., Bastl, K., Berger, U., Buters, J., Calderon, M.A., Clot, B., Darsow, 
 Ribeiro, H., Cunha, M. and Abreu, I., 2007. Definition of main pollen season using logistic model. \emph{Annals of Agricultural and Environmental Medicine}, 14(2), pp.259_264.
 }
 \seealso{
-\code{\link{interpollen}}, \code{\link{ps_plot}}
+\code{\link{interpollen}}, \code{\link{plot_ps}}
 }

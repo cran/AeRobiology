@@ -12,9 +12,9 @@
 #' @param ... Additional arguments for the function \code{\link{calculate_ps}} are also accepted.
 #' @return This function returns several plots in the directory \emph{plot_AeRobiology/trend_plots} with the extension \emph{.pdf} or \emph{.png}.Also produces an object of the class \code{data.frame} and export a table with the extension \emph{.xlsx}, in the directory \emph{table_AeRobiology}.\cr
 #'These tables have the information about the \code{slope} \emph{(beta coefficient of a lineal model using as predictor the year and as dependent variable one of the main pollen season indexes)}. The information is referred to the main pollen season indexes: \emph{Start Date}, \emph{Peak Date}, \emph{End Date} and \emph{Pollen Integral}.
-#' @seealso \code{\link{calculate_ps}}; \code{\link{trend_plot}}
-#' @examples  data("munich")
-#' @examples  trends(munich, interpolation = FALSE, export.plot = FALSE, export.result = TRUE)
+#' @seealso \code{\link{calculate_ps}}; \code{\link{analyse_trend}}
+#' @examples  data("munich_pollen")
+#' @examples  plot_trend(munich_pollen, interpolation = FALSE, export.plot = FALSE, export.result = TRUE)
 #' @importFrom graphics plot
 #' @importFrom utils data
 #' @importFrom ggplot2 aes element_text geom_point geom_smooth ggplot labs theme theme_classic theme_set scale_x_continuous
@@ -26,7 +26,7 @@
 #' @importFrom writexl write_xlsx
 #' @importFrom tidyr %>%
 #' @export
-trends  <-   function   (data,
+plot_trend  <-   function   (data,
                             interpolation = TRUE,
                             int.method = "lineal",
                             export.plot = TRUE,
@@ -42,7 +42,7 @@ trends  <-   function   (data,
   if(export.plot == TRUE){ifelse(!dir.exists(file.path("plot_AeRobiology")), dir.create(file.path("plot_AeRobiology")), FALSE)}
   if(export.plot == TRUE){ifelse(!dir.exists(file.path("plot_AeRobiology/trend_plots")), dir.create(file.path("plot_AeRobiology/trend_plots")), FALSE)}
   if(export.result == TRUE){ifelse(!dir.exists(file.path("table_AeRobiology")), dir.create(file.path("table_AeRobiology")), FALSE)}
-
+  data<-data.frame(data)
   if(class(data) != "data.frame") stop ("Please include a data.frame: first column with date, and the rest with pollen types")
 
   if(class(export.plot) != "logical") stop ("Please include only logical values for export.plot argument")
@@ -70,7 +70,7 @@ trends  <-   function   (data,
     return(p)
   }
 
-  datafram<-calculate_ps(data, method=method, interpolation = interpolation, int.method=int.method,...)
+  datafram<-calculate_ps(data, method=method, interpolation = interpolation, int.method=int.method,plot=FALSE,...)
 
   variables<-c("st.jd","pk.jd","en.jd","sm.ps")
 
@@ -98,7 +98,6 @@ trends  <-   function   (data,
               print(paste(type, variable, ": Error, linear model not calculated. Probably due to insufficient amount of years"))
             })
           }
-      print(type)
       }
 
 
@@ -111,7 +110,6 @@ datafram<-datafram[complete.cases(datafram),]
 
   for (p in 1:length(unique(as.character(datafram$type)))){
       pollen<-unique(as.character(datafram$type))[p]
-      print(pollen)
       dataframtemp<-datafram[which(datafram$type==pollen),]
 
       dataframtemp$seasons<-as.integer(dataframtemp$seasons)
@@ -234,7 +232,7 @@ datafram<-datafram[complete.cases(datafram),]
 
 
  if(export.plot == TRUE  & export.format == "png") {
-   png(paste0("plot_AeRobiology/trend_plots/trends_",pollen,".png"))
+   png(paste0("plot_AeRobiology/trend_plots/plot_trend_",pollen,".png"))
    pushViewport(viewport(layout=grid.layout(2,2)))
    vplayout<-function(x,y) viewport(layout.pos.row = x, layout.pos.col=y)
    print(p1, vp = vplayout(1,1))
@@ -246,7 +244,7 @@ datafram<-datafram[complete.cases(datafram),]
  }
 
  if(export.plot == TRUE  & export.format == "pdf") {
-   pdf(paste0("plot_AeRobiology/trend_plots/trends_",pollen, ".pdf"))
+   pdf(paste0("plot_AeRobiology/trend_plots/plot_trend_",pollen, ".pdf"))
    pushViewport(viewport(layout=grid.layout(2,2)))
    vplayout<-function(x,y) viewport(layout.pos.row = x, layout.pos.col=y)
    print(p1, vp = vplayout(1,1))
@@ -260,7 +258,7 @@ datafram<-datafram[complete.cases(datafram),]
 }
 
 lista<-list()
-lista[["trends"]]<-trendtime
+lista[["plot_trend"]]<-trendtime
 
 
 lista [["Information"]] <- data.frame(
@@ -272,7 +270,7 @@ lista [["Information"]] <- data.frame(
 
 
 if (export.result == TRUE) {
-  write_xlsx(lista, "table_AeRobiology/summary_of_trends.xlsx")
+  write_xlsx(lista, "table_AeRobiology/summary_of_plot_trend.xlsx")
 }
 return(trendtime)
 }

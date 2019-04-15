@@ -1,0 +1,10 @@
+#' Pollen data of Munich (2010_2015)
+#'
+#' A dataset containing information of daily concentrations of pollen in the atmosphere of Munich during the years 2010_2015. Pollen types included: \emph{"Alnus"}, \emph{"Betula"}, \emph{"Taxus"}, \emph{"Fraxinus"}, \emph{"Poaceae"}, \emph{"Quercus"}, \emph{"Ulmus"} and \emph{"Urtica"}.
+#' @format Time series of daily pollen concentrations expressed as pollen grains / m3 of air.
+#' @details Data were obtained at Munich (Zentrum Allergie und Umwelt, ZAUM) using a Hirst_type volumetric pollen trap (Hirst, 1952) following the standard methodology (VDI4252_4_2016). Some gaps have been added to test some functions of the package (e.g. \code{\link{quality_control}}, \code{\link{interpollen}}).
+#' @details The data were obtained by the research team of Prof. Jeroen Buters (Christine Weil & Ingrid Weichenmeier). We specially acknowledge this team and the Zentrum Allergie und Umwelt (ZAUM, directed by Prof. Carsten B. Schmidt_Weber) for their support.
+#' @references Hirst, J.M., 1952. AN AUTOMATIC VOLUMETRIC SPORE TRAP. Ann. Appl. Biol. 39, 257_265.
+#' @references VDI 4252_4. (2016). Bioaerosole und biologische Agenzien_Ermittlung von Pollen und Sporen in der Aussenluft unterVerwendung  einer volumetrischen  Methode  fuer  einMessnetz zu allergologischen Zwecken. VDI_Richtlinie4252 Blatt 4, Entwurf. VDI/DIN_Handbuch Reinhaltungder Luft, Band 1a: Beuth, Berlin
+#' @source \url{https://www.zaum-online.de/}
+"munich_pollen"

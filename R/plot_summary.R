@@ -8,7 +8,7 @@
 #' @param normalized A \code{logical} value specifying if the visualization shows real pollen data (\code{normalized = FALSE}) or the percentage of every day over the whole pollen season (\code{normalized = TRUE}). By default, \code{normalized = FALSE}.
 #' @param interpolation A \code{logical} value specifying if the visualization shows the gaps in the inputs data (\code{interpolation = FALSE}) or if an interpolation method is used for filling the gaps (\code{interpolation = TRUE}). By default, \code{interpolation = TRUE}.
 #' @param int.method A \code{character} string with the name of the interpolation method to be used. The implemented methods that may be used are: \code{"lineal"}, \code{"movingmean"}, \code{"tseries"} or \code{"spline"}. By default, \code{int.method = "lineal"}.
-#' @param export.plot A \code{logical} value specifying if a plot will be exported or not. If \code{FALSE} graphical results will only be displayed in the active graphics window. If \code{TRUE} graphical results will be displayed in the active graphics window and also one pdf/png file will be saved within the \emph{plot_AeRobiology} directory automatically created in the working directory. By default, \code{export.plot = TRUE}.
+#' @param export.plot A \code{logical} value specifying if a plot will be exported or not. If \code{FALSE} graphical results will only be displayed in the active graphics window. If \code{TRUE} graphical results will be displayed in the active graphics window and also one pdf/png file will be saved within the \emph{plot_AeRobiology} directory automatically created in the working directory. By default, \code{export.plot = FALSE}.
 #' @param export.format A \code{character} string specifying the format selected to save the plot. The implemented formats that may be used are: \code{"pdf"} or \code{"png"}. By default, \code{export.format = "pdf"}.
 #' @param axisname A \code{character} string specifying the title of the y axis. By default, \code{axisname =  "Pollen grains / m3"}.
 #' @param ... Other additional arguments may be used to customize the exportation of the plots using \code{"pdf"} or \code{"png"} files and therefore arguments from functions \code{\link[grDevices]{pdf}} and \code{\link[grDevices]{png}} may be implemented. For example, for pdf files the user may custom the arguments: width, height, family, title, fonts, paper, bg, fg, pointsize...; and for png files the user may custom the arguments: width, height, units, pointsize, bg, res...
@@ -17,9 +17,9 @@
 #' @return This function returns plot of class \pkg{ggplot2}. User are able to customize the output as a \pkg{ggplot2} object.
 #' @references Buters, J. T. M., Antunes, C., Galveias, A., Bergmann, K. C., Thibaudon, M., Galan, C. & Oteros, J. (2018). Pollen and spore monitoring in the world. \emph{Clinical and translational allergy}, 8(1), 9.
 #' @references Oteros, J., Bartusel, E., Alessandrini, F., Nunez, A., Moreno, D. A., Behrendt, H., ... & Buters, J. (2019). Artemisia pollen is the main vector for airborne endotoxin. \emph{Journal of Allergy and Clinical Immunology}.
-#' @seealso \code{\link{calculate_ps}}; \code{\link{summary_normplot}}
-#' @examples  data("munich")
-#' @examples  summary_plot(munich, pollen = "Betula", export.plot = FALSE, interpolation = FALSE)
+#' @seealso \code{\link{calculate_ps}}; \code{\link{plot_normsummary}}
+#' @examples  data("munich_pollen")
+#' @examples  plot_summary(munich_pollen, pollen = "Betula", export.plot = FALSE, interpolation = FALSE)
 #' @importFrom graphics plot
 #' @importFrom utils data
 #' @importFrom ggplot2 aes element_text geom_area geom_line ggplot ggtitle labs theme theme_bw theme_classic theme_set
@@ -28,13 +28,13 @@
 #' @importFrom stats aggregate
 #' @importFrom tidyr %>%
 #' @export
-summary_plot<-function (data,
+plot_summary<-function (data,
                       pollen,
                       mave=1,
                       normalized=FALSE,
                       interpolation = TRUE,
                       int.method = "lineal",
-                      export.plot = TRUE,
+                      export.plot = FALSE,
                       export.format = "pdf",
                       axisname="Pollen grains / m3",
                       ...){
@@ -44,7 +44,7 @@ summary_plot<-function (data,
   #############################################    CHECK THE ARGUMENTS       #############################
 
   if(export.plot == TRUE){ifelse(!dir.exists(file.path("plot_AeRobiology")), dir.create(file.path("plot_AeRobiology")), FALSE)}
-
+  data<-data.frame(data)
   if(class(data) != "data.frame") stop ("Please include a data.frame: first column with date, and the rest with pollen types")
 
   if(class(pollen) != "character") stop ("Please include only charactr values for 'pollen'")
@@ -135,7 +135,7 @@ if(interpolation == TRUE){data <- interpollen(data, method = int.method)}
 
 
 if(export.plot == TRUE  & export.format == "png") {
-  png(paste0("plot_AeRobiology/summary_plot_", pollen,".png"), ...)
+  png(paste0("plot_AeRobiology/plot_summary_", pollen,".png"), ...)
   plot(plot.summary)
   dev.off()
   png(paste0("plot_AeRobiology/credits.png"))
@@ -144,7 +144,7 @@ if(export.plot == TRUE  & export.format == "png") {
 }
 
 if(export.plot == TRUE  & export.format == "pdf") {
-  pdf(paste0("plot_AeRobiology/summary_plot_",  pollen, ".pdf"), ...)
+  pdf(paste0("plot_AeRobiology/plot_summary_",  pollen, ".pdf"), ...)
   plot(plot.summary)
 
   dev.off()

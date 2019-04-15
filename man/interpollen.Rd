@@ -6,7 +6,7 @@
 \usage{
 interpollen(data, method = "lineal", maxdays = 30, plot = TRUE,
   factor = 2, ndays = 3, spar = 0.5, data2 = NULL, data3 = NULL,
-  data4 = NULL, data5 = NULL, mincorr = 0.6)
+  data4 = NULL, data5 = NULL, mincorr = 0.6, result = "wide")
 }
 \arguments{
 \item{data}{A \code{data.frame} object including the general database where interpollation must be performed. This \code{data.frame} must include a first column in \code{Date} format and the rest of columns in \code{numeric} format. Each column must contain information of one pollen type. It is not necessary to insert missing gaps; the function will automatically detect them.}
@@ -26,12 +26,14 @@ interpollen(data, method = "lineal", maxdays = 30, plot = TRUE,
 \item{data2, data3, data4, data5}{A \code{data.frame} object (each one) including database of a neighbour pollen station which will be used to interpolate missing data in the target station. Only valid if the "neighbour" method is chosen. This \code{data.frame} must include a first column in \code{Date} format and the rest of columns in \code{numeric} format belonging to each pollen type by column. It is not necessary to insert the missing gaps; the function will automatically detect them. The arguments will be \code{NULL} by default.}
 
 \item{mincorr}{A \code{numeric (double)} value ranging \code{0_1}. It specifies the minimal correlation coefficient (Spearman correlations) that neighbour stations must have with the target station to be taken into account for the interpolation. Only valid if the \code{"neighbour"} method is chosen. The argument \code{"mincorr"} will be \code{0.6} by default.}
+
+\item{result}{A \code{character} string specifying the format of the resulting \code{data.frame}. Only \code{"wide"} or \code{"long"}. The \code{result} argument will be \code{"wide"} by default.}
 }
 \value{
 This function returns different results:
 \itemize{
-\item \code{data.frame} including the original data and completed with the interpolated data.
-\item \code{data.frame}  named \code{"Interpolated"} in long format (the first column for date, the second for pollen type, the third for concentration and an additional fourth column with \code{1} if this data has been interpolated and \code{0} if not.
+\item If \code{result = "wide"}, returns a \code{data.frame} including the original data and completed with the interpolated data.
+\item If \code{result = "long"}, returns a \code{data.frame} containing your data in long format (the first column for date, the second for pollen type, the third for concentration and an additional fourth column with \code{1} if this data has been interpolated or \code{0} if not).
 \item If \code{plot = TRUE}, plots for each year and pollen type with daily values are represented in the active graphic window. Interpolated values are marked in red. If \code{method} argument is \code{"tseries"}, the seasonality is also represented in grey.
 }
 }
@@ -49,8 +51,8 @@ This function allows to interpolate missing data in a pollen database using 4 di
 }
 }
 \examples{
-data("munich")
-interpollen(munich, method = "lineal", plot = FALSE)
+data("munich_pollen")
+interpollen(munich_pollen, method = "lineal", plot = FALSE)
 }
 \references{
 Cleveland RB, Cleveland WS, McRae JE, Terpenning I (1990) STL: a seasonal_trend decomposition procedure based on loess. J Off Stat 6(1):3_33.

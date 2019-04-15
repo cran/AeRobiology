@@ -6,16 +6,17 @@
 #' @param year An \code{integer} value specifying the year to display. This is a mandatory argument.
 #' @return An interactive plot of the class \pkg{ggvis}.
 #' @seealso \code{\link{iplot_years}}
-#' @examples data("munich")
-#' @examples iplot_pollen(data = munich, year = 2012)
+#' @examples data("munich_pollen")
+#' @examples iplot_pollen(data = munich_pollen, year = 2012)
 #' @importFrom dplyr filter
 #' @importFrom ggvis add_axis axis_props ggvis input_checkboxgroup input_slider layer_lines layer_points scale_numeric %>%
 #' @importFrom lubridate is.POSIXt yday year
-#' @importFrom reshape2 melt
+#' @importFrom tidyr gather
 #' @importFrom stats complete.cases
 #' @export
 iplot_pollen<-function(data, year){
 
+  data<-data.frame(data)
   if(class(data) != "data.frame") stop ("Please include a data.frame: first column with date, and the rest with pollen types")
 
   if(class(year) != "numeric") stop ("Please include only numeric values for 'year' (including only years in your database)")
@@ -23,13 +24,13 @@ iplot_pollen<-function(data, year){
   colnames(data)[1]<-"date"
   data[,1]<-as.Date(data[,1])
 
-datalong <-
-  melt(
-    data,
-    varying = colnames(data[2:length(data)]),
-    direction = "long",
-    id.vars = colnames(data[1])
-  )
+  datalong <-
+    gather(
+      data,
+      colnames(data[2:length(data)]),
+      key = "variable",
+      value = "value"
+    )
 
 ## Compare_pollen
 datalong_pollen <- datalong[which(year(datalong[, 1]) == year), ]

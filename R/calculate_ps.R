@@ -21,8 +21,10 @@
 #' @param interpolation A \code{logical} value. If \code{FALSE} the interpolation of the pollen data is not applicable. If \code{TRUE} an interpolation of the pollen series will be applied to complete the gaps with no data before the calculation of the pollen season. The \code{interpolation} argument will be \code{TRUE} by default. A more detailed information about the interpolation method may be consulted in \strong{Details}.
 #' @param int.method A \code{character} string specifying the method selected to apply the interpolation method in order to complete the pollen series. The implemented methods that may be used are: \code{"lineal"}, \code{"movingmean"}, \code{"spline"} or \code{"tseries"}. The \code{int.method} argument will be \code{"lineal"} by default.
 #' @param maxdays A \code{numeric} (\code{integer} value) specifying the maximum number of consecutive days with missing data that the algorithm is going to interpolate. If the gap is bigger than the argument value, the gap will not be interpolated. Not valid with \code{int.method = "tseries"}. The \code{maxdays} argument will be \code{30} by default.
-#' @param plot A \code{logical} value specifying if a set of plots based on the definition of the pollen season and saved in the working directory will be required or not. If \code{FALSE} graphical results will not be saved. If \code{TRUE} a \emph{pdf} file for each pollen type showing graphically the definition of the pollen season for each studied year will be saved within the \emph{plot_AeRobiology} directory created in the working directory. The \code{plot} argument will be \code{FALSE} by default.
-#' @param export.result A \code{logical} value specifying if a excel file including all parameters for the definition of the pollen season saved in the working directoty will be required or not. If \code{FALSE} the results will not exported. If \code{TRUE} the results will be exported as \emph{xlsx} file including all parameters calculated from the definition of the pollen season within the \emph{table_AeRobiology} directory created in the working directory. The \code{export.result} argument will be \code{TRUE} by default.
+#' @param result A \code{character} string specifying the output for the function. The implemented outputs that may be obtained are: \code{"table"} and \code{"list"}. The argument \code{result} will be \code{"table"} by default.
+#' @param plot A \code{logical} value specifying if a set of plots based on the definition of the pollen season will be shown in the plot history or not. If \code{FALSE} graphical results will not be shown. If \code{TRUE} a set of plots will be shown in the plot history. The \code{plot} argument will be \code{TRUE} by default.
+#' @param export.plot A \code{logical} value specifying if a set of plots based on the definition of the pollen season will be saved in the workspace. If \code{TRUE} a \emph{pdf} file for each pollen type showing graphically the definition of the pollen season for each studied year will be saved within the \emph{plot_AeRobiology} directory created in the working directory. The \code{plot} argument will be \code{FALSE} by default.
+#' @param export.result A \code{logical} value specifying if a excel file including all parameters for the definition of the pollen season saved in the working directoty will be required or not. If \code{FALSE} the results will not exported. If \code{TRUE} the results will be exported as \emph{xlsx} file including all parameters calculated from the definition of the pollen season within the \emph{table_AeRobiology} directory created in the working directory. The \code{export.result} argument will be \code{FALSE} by default.
 #' @details This function allows to calculate the pollen season using five different methods which are described below. After calculating the start_date, end_date and peak_date for the pollen season all rest of parameters have been calculated as detailed in \strong{Value} section.
 #' \itemize{
 #'   \item \code{"percentage"} method. This is a commonly used method for defining the pollen season based on the elimination of a certain percentage in the beginning and the end of the pollen season \emph{(Nilsson and Persson, 1981; Andersen, 1991)}. For example if the pollen season is based on the 95\% of the total annual pollen (\code{"perc" = 95}), the start_date of the pollen season is marked as the day in which 2.5\% of the total pollen is registered and the end_date of the pollen season is marked as the day in which 97.5\% of the total pollen is registered.
@@ -39,7 +41,7 @@
 #' }
 #' Pollen time series frequently have different gaps with no data and this fact could be a problem for the calculation of specific methods for defining the pollen season even providing incorrect results. In this sense by default a linear interpolation will be carried out to complete these gaps before to define the pollen season (\code{interpolation = TRUE}). Additionally, the users may select other interpolation methods using the \code{int.method} argument, as \code{"lineal"}, \code{"movingmean"}, \code{"spline"} or \code{"tseries"}. For more information to see the \code{\link{interpollen}} function.
 #' @return This function returns different results:\cr
-#' \code{data.frame} including the main parameters of the pollen season with regard to phenology and pollen intensity as:
+#' \code{data.frame} when \code{result = "table"} including the main parameters of the pollen season with regard to phenology and pollen intensity as:
 #' \itemize{
 #'    \item \strong{type}: pollen type
 #'    \item \strong{seasons}: year of the beginning of the season
@@ -63,17 +65,19 @@
 #'    \item \strong{en.dt.hs}: end_date of the High pollen season (date, only for clinical method)
 #'    \item \strong{en.jd.hs}: end_date of the High pollen season (day of the year, only for clinical method)
 #' }
+#' \code{list} when \code{result = "list"} including the main parameters of the pollen season, one pollen type by element
+#' \code{plots} when \code{plot = TRUE} showing graphically the definition of the pollen season for each studied year in the plot history.
 #' If \code{export.result = TRUE} this \code{data.frame} will also be exported as \emph{xlsx} file within the \emph{table_AeRobiology} directory created in the working directory. If \code{export.result = FALSE} the results will also be showed as list object named \code{list.ps}. \cr
-#' If \code{plot = TRUE} a \emph{pdf} file for each pollen type showing graphically the definition of the pollen season for each studied year will be saved within the \emph{plot_AeRobiology} directory created in the working directory.
+#' If \code{export.plot = TRUE} a \emph{pdf} file for each pollen type showing graphically the definition of the pollen season for each studied year will be saved within the \emph{plot_AeRobiology} directory created in the working directory.
 #' @references Andersen, T.B., 1991. A model to predict the beginning of the pollen season. \emph{Grana}, 30(1), pp.269_275.
 #' @references Cunha, M., Ribeiro, H., Costa, P. and Abreu, I., 2015. A comparative study of vineyard phenology and pollen metrics extracted from airborne pollen time series. \emph{Aerobiologia}, 31(1), pp.45_56.
 #' @references  Galan, C., Garcia_Mozo, H., Carinanos, P., Alcazar, P. and Dominguez_Vilches, E., 2001. The role of temperature in the onset of the \emph{Olea europaea} L. pollen season in southwestern Spain. \emph{International Journal of Biometeorology}, 45(1), pp.8_12.
 #' @references Nilsson, S. and Persson, S., 1981. Tree pollen spectra in the Stockholm region (Sweden), 1973_1980. \emph{Grana}, 20(3), pp.179_182.
 #' @references Pfaar, O., Bastl, K., Berger, U., Buters, J., Calderon, M.A., Clot, B., Darsow, U., Demoly, P., Durham, S.R., Galan, C., Gehrig, R., Gerth van Wijk, R., Jacobsen, L., Klimek, L., Sofiev, M., Thibaudon, M. and Bergmann, K.C., 2017. Defining pollen exposure times for clinical trials of allergen immunotherapy for pollen_induced rhinoconjunctivitis_an EAACI position paper. \emph{Allergy}, 72(5), pp.713_722.
 #' @references Ribeiro, H., Cunha, M. and Abreu, I., 2007. Definition of main pollen season using logistic model. \emph{Annals of Agricultural and Environmental Medicine}, 14(2), pp.259_264.
-#' @seealso \code{\link{interpollen}}, \code{\link{ps_plot}}
-#' @examples data("munich")
-#' @examples calculate_ps(munich, plot = FALSE, export.result = FALSE)
+#' @seealso \code{\link{interpollen}}, \code{\link{plot_ps}}
+#' @examples data("munich_pollen")
+#' @examples calculate_ps(munich_pollen, plot = TRUE, result = "table")
 #' @importFrom circular circular mean.circular
 #' @importFrom graphics abline lines  par plot
 #' @importFrom grDevices dev.copy dev.off graphics.off recordPlot
@@ -102,16 +106,22 @@ calculate_ps <- function(data,
                           interpolation = TRUE,
                           int.method = "lineal",
                           maxdays = 30,
-                          plot = FALSE,
-                          export.result = TRUE) {
-
-
+                          result = "table",
+                          plot = TRUE,
+                          export.plot = FALSE,
+                          export.result = FALSE) {
 
   ######################################################################################################
 
-  if(plot == TRUE){ifelse(!dir.exists(file.path("plot_AeRobiology")), dir.create(file.path("plot_AeRobiology")), FALSE)}
+  if(class(export.plot) != "logical") stop ("Please include only logical values for export.plot argument")
+
+  if(class(export.result) != "logical") stop ("Please include only logical values for export.result argument")
+
+  if(export.plot == TRUE){ifelse(!dir.exists(file.path("plot_AeRobiology")), dir.create(file.path("plot_AeRobiology")), FALSE); plot = TRUE}
+
   if(export.result == TRUE){ifelse(!dir.exists(file.path("table_AeRobiology")), dir.create(file.path("table_AeRobiology")), FALSE)}
 
+  data<-data.frame(data)
   if(class(data) != "data.frame") stop ("Please include a data.frame: first column with date, and the rest with pollen types")
 
   if(class(th.day) != "numeric" | th.day < 0) stop ("Please include only numeric values >= 0 for th.day argument")
@@ -127,6 +137,8 @@ calculate_ps <- function(data,
   if(class(man) != "numeric" | man < 0) stop ("Please include only numeric values > 0 for man argument")
 
   if(class(th.ma) != "numeric" | th.ma < 0) stop ("Please include only numeric values > 0 for th.ma argument")
+
+  if(result != "table" & result != "list") stop ("Please result only accept values: 'table' or 'list'")
 
   if(class(plot) != "logical") stop ("Please include only logical values for plot argument")
 
@@ -223,8 +235,9 @@ calculate_ps <- function(data,
 
     if(method == "clinical") {result.ps <- data.frame(seasons, st.dt = NA, st.jd = NA, en.dt = NA, en.jd = NA, ln.ps = NA, sm.tt = NA, sm.ps = NA, pk.val = NA, pk.dt = NA, pk.jd = NA, ln.prpk = NA, sm.prpk = NA, ln.pspk = NA, sm.pspk = NA, daysth = NA, st.dt.hs = NA, st.jd.hs = NA, en.dt.hs = NA, en.jd.hs = NA)}
 
-    if(plot == TRUE){graphics.off()}
-    if(plot == TRUE){par(mfrow = c(ceiling(length(seasons)/4),4), mar = c(0.5,0.5,1,0.5))}
+    #if(plot == TRUE){graphics.off()}
+    #if(plot == TRUE){par(mfrow = c(ceiling(length(seasons)/4),4), mar = c(0.5,0.5,1,0.5))}
+    par(mfrow = c(ceiling(length(seasons)/4),4), mar = c(0.5,0.5,1,0.5))
 
     for (j in 1:length(seasons)) {
       tryCatch({
@@ -234,9 +247,18 @@ calculate_ps <- function(data,
         if(length(which(complete.cases(data[which(data$n.year==ye), c(1,t)]))) == 0 | sum(data[which(data$n.year==ye), type.name[t]], na.rm = T) == 0) {print(paste("Error: Year", ye, type.name[t], ". The entire aerobiological data are NA or 0")); next()}
 
         pollen.s <- na.omit(data[which(data$n.year==ye), c(1,t)]) # Pollen data without NAs
+        #pollen.s <- data[which(data$n.year==ye), c(1,t)]
         pollen.s$jdays <- as.numeric(strftime(pollen.s[, 1], "%j"))
+        
+        pollen.s3 <- pollen.s
 
         if (method == "moving") { ### Method using the moving average limited by a threshold
+
+          pollen.s1 <- data.frame(Date = seq(from = pollen.s[, 1][1], to = pollen.s[, 1][nrow(pollen.s)], by = "day"), pollen = 0, jdays = 0)
+          colnames(pollen.s1) <- colnames(pollen.s)
+          pollen.s1$jdays <- as.numeric(strftime(pollen.s1[, 1], "%j"))
+          pollen.s1[which(pollen.s1[, 1] %in% pollen.s[, 1]), 2] <- pollen.s[which(pollen.s[, 1] %in% pollen.s1[, 1]), 2]
+          pollen.s <- pollen.s1
 
               pollen.s$ma <- ma(pollen.s[, 2], man=man)
               pollen.s[which(is.nan(pollen.s[, "ma"])), "ma"] <- NA
@@ -251,9 +273,10 @@ calculate_ps <- function(data,
 
               } else{
                 mx.ps <- pollen.s[which(pollen.s[, 2] == max(pollen.s[, 2], na.rm = T)), 1][1]%>%yday(.)
-                st.ps <- pollen.s[which((pollen.s[, "ma"] <= th.ma) & (yday(pollen.s[, 1]) < yday(Peakmod))), 1] %>% .[length(.)]%>%yday(.)
-                en.ps <- pollen.s[which((pollen.s[, "ma"] <= th.ma) &
-                                         (yday(pollen.s[, 1]) > yday(Peakmod))), 1] %>% .[1]%>%yday(.)
+                #st.ps <- pollen.s[which((pollen.s[, "ma"] <= th.ma) & (yday(pollen.s[, 1]) < yday(Peakmod))), 1] %>% .[length(.)]%>%yday(.)
+                st.ps <- pollen.s[which((pollen.s[, "ma"] < th.ma) & (pollen.s[, 1] < Peakmod)), 1] %>% .[length(.)]%>%yday(.)+1
+                #en.ps <- pollen.s[which((pollen.s[, "ma"] <= th.ma) & (yday(pollen.s[, 1]) > yday(Peakmod))), 1] %>% .[1]%>%yday(.)
+                en.ps <- pollen.s[which((pollen.s[, "ma"] < th.ma) & (pollen.s[, 1] > Peakmod)), 1] %>% .[1]%>%yday(.)-1
 
                 if (is.numeric(st.ps) &
                     length(st.ps) >=1){} else{
@@ -300,22 +323,52 @@ calculate_ps <- function(data,
 
         if (method == "clinical"){ ### Method using the clinical method (Pfaar et al. 2017)
 
-          for (f in 1: (nrow(pollen.s) - window.clinical)){
+          #for (f in 1: (nrow(pollen.s) - window.clinical)){
+          #  if(pollen.s[f, type.name[t]] >= th.pollen &
+          #    length(which(pollen.s[f:(f + window.clinical), type.name[t]] >= th.pollen)) >= n.clinical &
+          #    sum(head(sort(pollen.s[f:(f + window.clinical), type.name[t]][which(pollen.s[f:(f + window.clinical), type.name[t]] >= th.pollen)], decreasing = TRUE), n.clinical)) >= th.sum){
+          #    st.ps <- pollen.s$jdays[f]; break()}
+          #}
+          
+          for (f in 1: nrow(pollen.s)){
+          if((nrow(pollen.s) - (f + window.clinical)) <= 0){
             if(pollen.s[f, type.name[t]] >= th.pollen &
-              length(which(pollen.s[f:(f + window.clinical), type.name[t]] >= th.pollen)) >= n.clinical &
-              #sum(pollen.s[f:(f + window.clinical), type.name[t]]) >= th.sum
-              sum(head(sort(pollen.s[f:(f + window.clinical), type.name[t]][which(pollen.s[f:(f + window.clinical), type.name[t]] >= th.pollen)], decreasing = TRUE), n.clinical)) >= th.sum){
+               length(which(pollen.s[f:nrow(pollen.s), type.name[t]] >= th.pollen)) >= n.clinical &
+               sum(head(sort(pollen.s[f:nrow(pollen.s), type.name[t]][which(pollen.s[f:nrow(pollen.s), type.name[t]] >= th.pollen)], decreasing = TRUE), n.clinical)) >= th.sum){
+              st.ps <- pollen.s$jdays[f]; break()}
+          } else {
+            if(pollen.s[f, type.name[t]] >= th.pollen &
+               length(which(pollen.s[f:(f + window.clinical), type.name[t]] >= th.pollen)) >= n.clinical &
+               sum(head(sort(pollen.s[f:(f + window.clinical), type.name[t]][which(pollen.s[f:(f + window.clinical), type.name[t]] >= th.pollen)], decreasing = TRUE), n.clinical)) >= th.sum){
               st.ps <- pollen.s$jdays[f]; break()}
           }
-
-          for (f in (1 + window.clinical) : nrow(pollen.s)){
-            if(pollen.s[f, type.name[t]] >= th.pollen &
-              length(which(pollen.s[f:(f - window.clinical), type.name[t]] >= th.pollen)) >= n.clinical &
-              #sum(pollen.s[f:(f - window.clinical), type.name[t]]) >= th.sum
-              sum(head(sort(pollen.s[f:(f - window.clinical), type.name[t]][which(pollen.s[f:(f - window.clinical), type.name[t]] >= th.pollen)], decreasing = TRUE), n.clinical)) >= th.sum) {
-              en.ps <- pollen.s$jdays[f]}
+          }
+          
+          #for (f in (1 + window.clinical) : nrow(pollen.s)){
+          #    if(pollen.s[f, type.name[t]] >= th.pollen &
+          #       length(which(pollen.s[f:(f - window.clinical), type.name[t]] >= th.pollen)) >= n.clinical &
+          #       sum(head(sort(pollen.s[f:(f - window.clinical), type.name[t]][which(pollen.s[f:(f - window.clinical), type.name[t]] >= th.pollen)], decreasing = TRUE), n.clinical)) >= th.sum) {
+          #      en.ps <- pollen.s$jdays[f]}
+          #  }          
+          
+          for (f in 1 : nrow(pollen.s)){
+            if((f - window.clinical) <= 0){
+              
+              if(pollen.s[f, type.name[t]] >= th.pollen &
+                 length(which(pollen.s[f:1, type.name[t]] >= th.pollen)) >= n.clinical &
+                 sum(head(sort(pollen.s[f:1, type.name[t]][which(pollen.s[f:1, type.name[t]] >= th.pollen)], decreasing = TRUE), n.clinical)) >= th.sum) {
+                en.ps <- pollen.s$jdays[f]}
+              
+            } else {
+              
+              if(pollen.s[f, type.name[t]] >= th.pollen &
+                 length(which(pollen.s[f:(f - window.clinical), type.name[t]] >= th.pollen)) >= n.clinical &
+                 sum(head(sort(pollen.s[f:(f - window.clinical), type.name[t]][which(pollen.s[f:(f - window.clinical), type.name[t]] >= th.pollen)], decreasing = TRUE), n.clinical)) >= th.sum) {
+                en.ps <- pollen.s$jdays[f]}
+            }
           }
 
+          
           for (h in 1: (nrow(pollen.s) - 2)){
             if(pollen.s[h, type.name[t]] >= th.day &
               length(which(pollen.s[h:(h + 2), type.name[t]] >= th.day)) == 3) {
@@ -334,21 +387,53 @@ calculate_ps <- function(data,
 
 
         if (method == "grains"){ ### Method using the grains method (Galan et al. 1991)
-          for (f in 1: (nrow(pollen.s) - window.grains)){
-            if(pollen.s[f, type.name[t]] >= th.pollen & length(which(pollen.s[f:(f + window.grains), type.name[t]] >= th.pollen)) >= (window.grains+1)) {st.ps <- pollen.s$jdays[f]; break()}
+          
+          #for (f in 1: (nrow(pollen.s) - window.grains)){
+          #  if(pollen.s[f, type.name[t]] >= th.pollen & length(which(pollen.s[f:(f + window.grains), type.name[t]] >= th.pollen)) >= (window.grains+1)) {st.ps <- pollen.s$jdays[f]; break()}
+          #}
+          
+          for (f in 1: nrow(pollen.s)){
+            if((nrow(pollen.s) - (f + window.grains)) <= 0){
+              if(pollen.s[f, type.name[t]] >= th.pollen & length(which(pollen.s[f:nrow(pollen.s), type.name[t]] >= th.pollen)) >= (window.grains+1)) {st.ps <- pollen.s$jdays[f]; break()}
+              
+            } else {
+              
+              if(pollen.s[f, type.name[t]] >= th.pollen & length(which(pollen.s[f:(f + window.grains), type.name[t]] >= th.pollen)) >= (window.grains+1)) {st.ps <- pollen.s$jdays[f]; break()}
+            }
+              
           }
-          for (f in (1 + window.grains) : nrow(pollen.s)){
-            if(pollen.s[f, type.name[t]] >= th.pollen & length(which(pollen.s[f:(f - window.grains), type.name[t]] >= th.pollen)) >= (window.grains+1)) {en.ps <- pollen.s$jdays[f]}
+          
+          #for (f in (1 + window.grains) : nrow(pollen.s)){
+          #  if(pollen.s[f, type.name[t]] >= th.pollen & length(which(pollen.s[f:(f - window.grains), type.name[t]] >= th.pollen)) >= (window.grains+1)) {en.ps <- pollen.s$jdays[f]}
+          #}
+          
+          for (f in 1 : nrow(pollen.s)){
+            if((f - window.grains) <= 0){
+              if(pollen.s[f, type.name[t]] >= th.pollen & length(which(pollen.s[f:1, type.name[t]] >= th.pollen)) >= (window.grains+1)) {en.ps <- pollen.s$jdays[f]}
+            
+            } else {
+              
+              if(pollen.s[f, type.name[t]] >= th.pollen & length(which(pollen.s[f:(f - window.grains), type.name[t]] >= th.pollen)) >= (window.grains+1)) {en.ps <- pollen.s$jdays[f]}
+            }  
+            
           }
+          
           mx.ps <- pollen.s$jdays[which(pollen.s[type.name[t]] == max(pollen.s[type.name[t]]))[1]]
         }
 
 
         if (method == "logistic"){ ### Method using the accumulated curve (Ribeiro et al. 2004)
+
+          pollen.s1 <- data.frame(Date = seq(from = pollen.s[, 1][1], to = pollen.s[, 1][nrow(pollen.s)], by = "day"), pollen = 0, jdays = 0)
+          colnames(pollen.s1) <- colnames(pollen.s)
+          pollen.s1$jdays <- as.numeric(strftime(pollen.s1[, 1], "%j"))
+          pollen.s1[which(pollen.s1[, 1] %in% pollen.s[, 1]), 2] <- pollen.s[which(pollen.s[, 1] %in% pollen.s1[, 1]), 2]
+          pollen.s <- pollen.s1
+
           pollen.s2 <- pollen.s
 
           if(reduction == TRUE){
-            pollen.s[which( pollen.s[, type.name[t]] >= quantile(data[data[ ,type.name[t]] > 0, type.name[t]], red.level)), type.name[t]] <- quantile(data[data[ ,type.name[t]] > 0, type.name[t]], red.level)}
+            pollen.s[which( pollen.s[, type.name[t]] >= quantile(data[data[ ,type.name[t]] > 0, type.name[t]], red.level, na.rm = TRUE)), type.name[t]] <- quantile(data[data[ ,type.name[t]] > 0, type.name[t]], red.level, na.rm = TRUE)}
 
           #pollen.s[ , type.name[t]] <- round(ma(pollen.s[ , type.name[t]], order = 5))
           pollen.s <- na.omit(pollen.s)
@@ -364,13 +449,14 @@ calculate_ps <- function(data,
           }
 
           tryCatch({
-            tryCatch({model.acum <- nls(acum~a*(1+exp(-(b+g*ndays)))^-1, start=list(a = max(pollen.s$acum),g = 1,b = -2), data=pollen.s)}, error = function(e){
-              SS <<- getInitial(acum ~ SSlogis(ndays,alpha,xmid,scale), data = pollen.s)
-              a <<- SS["alpha"]
-              g <<- 1/SS["scale"]
-              b <<- SS["alpha"]/(exp(SS["xmid"]/SS["scale"])+1)
-              model.acum <<- nls(acum~a*(1+exp(-(b+g*ndays)))^-1, start=list(a = a, g = g, b = b), data=pollen.s)
-            })
+            tryCatch({model.acum <- nls(acum~a*(1+exp(-(b+g*ndays)))^-1, start=list(a = max(pollen.s$acum),g = 1,b = -2), data=pollen.s)}, error = function(e){})
+            tryCatch({
+              SS <- getInitial(acum ~ SSlogis(ndays,alpha,xmid,scale), data = pollen.s)
+              a <- SS["alpha"]
+              g <- 1/SS["scale"]
+              b <- SS["alpha"]/(exp(SS["xmid"]/SS["scale"])+1)
+              model.acum <- nls(acum~a*(1+exp(-(b+g*ndays)))^-1, start=list(a = a, g = g, b = b), data=pollen.s)
+            }, error = function(e){})
           }, error = function(e){print(paste("Error:", "Year:", ye, type.name[t]))})
 
           tryCatch({
@@ -382,11 +468,11 @@ calculate_ps <- function(data,
             x2 <- -c[3]/c[2]; x2 <- round(x2)
 
             if(x2==0){
-              SS <<- getInitial(acum ~ SSlogis(ndays,alpha,xmid,scale), data = pollen.s)
-              a <<- SS["alpha"]
-              g <<- 1/SS["scale"]
-              b <<- SS["alpha"]/(exp(SS["xmid"]/SS["scale"])+1)
-              model.acum <<- nls(acum~a*(1+exp(-(b+g*ndays)))^-1, start=list(a = a, g = g, b = b), data=pollen.s)
+              SS <- getInitial(acum ~ SSlogis(ndays,alpha,xmid,scale), data = pollen.s)
+              a <- SS["alpha"]
+              g <- 1/SS["scale"]
+              b <- SS["alpha"]/(exp(SS["xmid"]/SS["scale"])+1)
+              model.acum <- nls(acum~a*(1+exp(-(b+g*ndays)))^-1, start=list(a = a, g = g, b = b), data=pollen.s)
               c <- coef(model.acum) # a es c[1], g es c[2] y b es c[3]
               aj.acum <- function(t){c[1]*(1+exp(-(c[3]+c[2]*t)))^-1}
               pollen.s$model <- aj.acum(pollen.s$ndays)
@@ -411,6 +497,8 @@ calculate_ps <- function(data,
             en.ps <- pollen.s$jdays[which(pollen.s$ndays == x3)]
             mx.ps <- pollen.s2$jdays[which(pollen.s2[type.name[t]] == max(pollen.s2[type.name[t]]))[1]]
 
+            if(reduction == TRUE){pollen.s <- pollen.s2}
+            
           }, error = function(e){
             print(paste("Error: Year", ye, type.name[t], ". This method can not parametrize the model for this aerobiological data"))
           })
@@ -443,21 +531,28 @@ calculate_ps <- function(data,
         if(plot == TRUE){
 
           if(method == "percentage" | method == "logistic" | method == "clinical" | method == "grains"){
-          plot(y = pollen.s[ ,type.name[t]], x = pollen.s$jdays, type = "l", main = paste(toupper(type.name[t]), ye), ylab = expression(paste("Granos de polen/m"^"3")), xlab = "Julian days", xaxt = "n", yaxt = "n", lwd = 1.5)
+          plot(y = pollen.s[ ,type.name[t]], x = 1:length(pollen.s$jdays), type = "l", main = paste(toupper(type.name[t]), ye), ylab = expression(paste("Granos de polen/m"^"3")), xlab = "Julian days", xaxt = "n", yaxt = "n", lwd = 1.5)
+          #plot(y = pollen.s[ ,type.name[t]], x = pollen.s$jdays, type = "l", main = paste(toupper(type.name[t]), ye), ylab = expression(paste("Granos de polen/m"^"3")), xlab = "Julian days", xaxt = "n", yaxt = "n", lwd = 1.5)
           par(new=T)
           #plot(pollen.s$acum, x = pollen.s$ndays, type="l", col="red")
           #plot(pollen.s$acum, type="l", col="red")
           #lines(pollen.s$ndays, aj.acum(pollen.s$ndays), col="blue")
           ymax <- max(pollen.s[ ,type.name[t]])+100
-          lines(x = c(result.ps[j,"st.jd"], result.ps[j,"st.jd"]), y = c(0,ymax), col = 2, lty = 2, lwd = 2)
+          #lines(x = c(result.ps[j,"st.jd"], result.ps[j,"st.jd"]), y = c(0,ymax), col = 2, lty = 2, lwd = 2)
+          lines(x = c(which(pollen.s$jdays == result.ps[j,"st.jd"]), which(pollen.s$jdays == result.ps[j,"st.jd"])), y = c(0,ymax), col = 2, lty = 2, lwd = 2)
           #lines(x=c(mx.ps, mx.ps), y=c(0,ymax), col=2, lty=2, lwd=2)
-          lines(x = c(result.ps[j,"en.jd"], result.ps[j,"en.jd"]), y = c(0,ymax), col = 2, lty = 2, lwd = 2)
-          lines(x = c(result.ps[j,"pk.jd"], result.ps[j,"pk.jd"]), y = c(0,ymax), col = 3, lty = 2, lwd = 2)
+          #lines(x = c(result.ps[j,"en.jd"], result.ps[j,"en.jd"]), y = c(0,ymax), col = 2, lty = 2, lwd = 2)
+          lines(x = c(which(pollen.s$jdays == result.ps[j,"en.jd"]), which(pollen.s$jdays == result.ps[j,"en.jd"])), y = c(0,ymax), col = 2, lty = 2, lwd = 2)
+          #lines(x = c(result.ps[j,"pk.jd"], result.ps[j,"pk.jd"]), y = c(0,ymax), col = 3, lty = 2, lwd = 2)
+          lines(x = c(which(pollen.s$jdays == result.ps[j,"pk.jd"]), which(pollen.s$jdays == result.ps[j,"pk.jd"])), y = c(0,ymax), col = 3, lty = 2, lwd = 2)
           } else {
 
-            plot(y = pollen.s[ ,2], x = yday(pollen.s[ ,1]), type = "l", main = paste(toupper(type.name[t])," ", ye), xaxt = "n", yaxt = "n", lwd = 1.5)
-            lines(pollen.s[ ,"ma"], x = yday(pollen.s[ ,1]), col="red")
-            abline(v = c(st.ps,en.ps), col = 4, lty = 2, lwd = 2)
+            #plot(y = pollen.s[ ,2], x = yday(pollen.s[ ,1]), type = "l", main = paste(toupper(type.name[t])," ", ye), xaxt = "n", yaxt = "n", lwd = 1.5)
+            plot(y = pollen.s[ ,2], x = 1:length(yday(pollen.s[ ,1])), type = "l", main = paste(toupper(type.name[t])," ", ye), xaxt = "n", yaxt = "n", lwd = 1.5)
+            #lines(pollen.s[ ,"ma"], x = yday(pollen.s[ ,1]), col="red")
+            lines(pollen.s[ ,"ma"], x = 1:length(yday(pollen.s[ ,1])), col="red")
+            #abline(v = c(st.ps,en.ps), col = 4, lty = 2, lwd = 2)
+            abline(v = c(which(yday(pollen.s[ ,1]) == st.ps), which(yday(pollen.s[ ,1]) == en.ps)), col = 4, lty = 2, lwd = 2)
             abline(h = th.ma, col = 3, lty = 2, lwd = 2)
           }
 
@@ -467,11 +562,12 @@ calculate_ps <- function(data,
         print(paste(ye, type.name[t]))
       }, error = function(e){
         print(paste("Year", ye, type.name[t], ". Try to check the aerobiological data for this year"))
-        result.ps[j,"sm.tt"] <<- sum(pollen.s[type.name[t]])
-        result.ps[j,"pk.val"] <<- max(pollen.s[type.name[t]])
-        result.ps[j,"pk.dt"] <<- as.character(pollen.s[which(pollen.s[type.name[t]] == max(pollen.s[type.name[t]]))[1], 1]) # Peak date
-        result.ps[j,"pk.jd"] <<- pollen.s$jdays[which(pollen.s[type.name[t]] == max(pollen.s[type.name[t]]))[1]] # Peak date (JD)
       })
+        result.ps[j,"sm.tt"] <- sum(pollen.s3[type.name[t]])
+        result.ps[j,"pk.val"] <- max(pollen.s3[type.name[t]])
+        result.ps[j,"pk.dt"] <- as.character(pollen.s3[which(pollen.s3[type.name[t]] == max(pollen.s3[type.name[t]]))[1], 1]) # Peak date
+        result.ps[j,"pk.jd"] <- pollen.s3$jdays[which(pollen.s3[type.name[t]] == max(pollen.s3[type.name[t]]))[1]] # Peak date (JD)
+
 
       st.ps <-NA; mx.ps <- NA; en.ps <- NA; st.hs <- NA; en.hs <- NA
     }
@@ -479,13 +575,13 @@ calculate_ps <- function(data,
     result.ps$en.dt <- as.Date(strptime(result.ps$en.dt, "%Y-%m-%d"))
     result.ps$pk.dt <- as.Date(strptime(result.ps$pk.dt, "%Y-%m-%d"))
 
-    if(plot == TRUE){plot.season <- recordPlot()}
+    if(export.plot == TRUE){plot.season <- recordPlot()}
 
     list.results[[type.name[t]]] <- result.ps
 
     par(mfrow = c(1,1), mar = c(5.1, 4.1, 4.1, 2.1))
 
-    if(plot == TRUE){
+    if(export.plot == TRUE){
       if(method == "percentage") {dev.copy(pdf, paste0("plot_AeRobiology/plot_",type.name[t],"_",method,perc,".pdf")); plot.season; dev.off()}
       if(method == "logistic") {dev.copy(pdf, paste0("plot_AeRobiology/plot_",type.name[t],"_",method,derivative,".pdf")); plot.season;  dev.off()}
       if(method == "moving") {dev.copy(pdf, paste0("plot_AeRobiology/plot_",type.name[t],"_",method,man,"_",th.ma,".pdf")); plot.season; dev.off()}
@@ -496,7 +592,7 @@ calculate_ps <- function(data,
   }
 
   par(mfrow = c(1,1), mar = c(5.1, 4.1, 4.1, 2.1))
-  if(plot == TRUE){graphics.off()}
+  #if(plot == TRUE){graphics.off()}
 
   nam.list <- names(list.results)
 
@@ -507,7 +603,7 @@ calculate_ps <- function(data,
     }
   }
 
-  if (export.result == FALSE) {list.ps <<- list.results}
+  list.ps <- list.results
 
   list.results [["Information"]] <- data.frame(
         Attributes = c("Pollen type", "seasons", "st.dt", "st.jd", "en.dt", "en.jd", "ln.ps", "sm.tt", "sm.ps", "pk.val", "pk.dt", "pk.jd", "ln.prpk", "sm.prpk", "ln.pspk", "sm.pspk", "daysth", "st.dt.hs", "st.jd.hs", "en.dt.hs", "en.jd.hs", "", "", "Method of the pollen season", "Interpolation", "Interpolation method", "Method for defining period", "", "Aditional arguments", "perc", "th.day", "reduction", "red.level", "derivative", "man", "th.ma", "n.clinical", "window.clinical", "window.grains", "th.pollen", "th.sum", "type", "", "", "Package", "Authors"),
@@ -521,5 +617,8 @@ calculate_ps <- function(data,
     if(method == "grains") {write_xlsx(list.results, paste0("table_AeRobiology/table_ps_",method,window.grains+1,"_",th.pollen,".xlsx"))}
     }
 
-  return(df.results)
+  par(mfrow = c(1,1), mar = c(5.1, 4.1, 4.1, 2.1))
+
+  if (result == "table") {return(df.results)}
+  if (result == "list") {return(list.ps)}
 }
