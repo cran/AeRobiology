@@ -1,5 +1,13 @@
 # AeRobiology version 2.0
 
+### Changes in AeRobiology version 2.0.1
+
+* Bug solved in interpollen(method="tseries")
+
+* CITATION file added with the manuscript information: *Rojo, J., Picornell, A., Oteros, J. (2019) AeRobiology: the computational tool for biological data in the air. Methods in Ecology and Evolution. DOI.: 10.1111/2041-210X.13203*
+
+* Faster functions plot_hour() and plot_heathour(), when the argument *locations = FALSE*
+
 ## Major changes in version 2.0
 
 * Two new functions for hourly data processing added: **plot_hour()** and **plot_heathour()**.  

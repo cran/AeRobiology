@@ -1,7 +1,7 @@
 Package: AeRobiology
 Type: Package
 Title: A Computational Tool for Aerobiological Data
-Version: 2.0
+Version: 2.0.1
 Author: Jesus Rojo <Jesus.Rojo@uclm.es>, Antonio Picornell <picornell@uma.es>, Jose Oteros <OterosJose@gmail.com>
 Maintainer: "Jose Oteros" <OterosJose@gmail.com>
 Description: Different tools for managing databases of airborne particles, elaborating the main calculations and visualization of results. In a first step, data are checked using tools for quality control and all missing gaps are completed. Then, the main parameters of the pollen season are calculated and represented graphically. Multiple graphical tools are available: pollen calendars, phenological plots, time series, tendencies, interactive plots, abundance plots...
@@ -15,6 +15,6 @@ RoxygenNote: 6.1.1
 Suggests: testthat, knitr, rmarkdown
 VignetteBuilder: knitr
 NeedsCompilation: no
-Packaged: 2019-04-15 06:09:59 UTC; MSI
+Packaged: 2019-05-06 10:15:59 UTC; MSI
 Repository: CRAN
-Date/Publication: 2019-04-15 06:45:22 UTC
+Date/Publication: 2019-06-03 06:20:03 UTC

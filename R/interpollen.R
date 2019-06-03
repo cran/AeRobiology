@@ -79,6 +79,7 @@ interpollen <-
     if(mincorr<0 | mincorr>1){stop("mincorr: Please insert only a number between 0 and 1 ")}
 
     data<-data.frame(data)
+    colnames(data)[1]<-"date"
     if (class(data) != "data.frame"& !is.null(data)){
       stop ("Please, include a data.frame: first column with date, and the rest with pollen types")}
     if (class(data2) != "data.frame" & !is.null(data2)){

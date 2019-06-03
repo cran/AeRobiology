@@ -1,0 +1,16 @@
+citHeader("To cite the AeRobiology package in publications use:")
+
+citEntry(entry = "Article",
+  title        = "AeRobiology: the computational tool for biological data in the air",
+  author       = personList(as.person("Jesus Rojo"), as.person("Antonio Picornell"), as.person("Jose Oteros")),
+  year         = "2019",
+  journal    = "Methods in Ecology and Evolution",
+  publisher      = "British Ecological Society",
+  url          = "https://doi.org/10.1111/2041-210X.13203",
+
+  textVersion  =
+  paste("Jesus Rojo, Antonio Picornell and Jose Oteros (2019).",
+        "AeRobiology: the computational tool for biological data in the air",
+        "Methods in Ecology and Evolution",
+        "https://doi.org/10.1111/2041-210X.13203")
+)

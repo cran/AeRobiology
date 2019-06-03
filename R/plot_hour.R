@@ -55,6 +55,7 @@ plot_hour <-
     ##### Calculate hourly frames
     frame3<-data.frame()
     data_end<-data.frame()
+    if (locations == TRUE){
     for (loc in levels(table$location)){
 
       tabletemp<-dayconc[which(dayconc$location==loc),]
@@ -78,6 +79,30 @@ plot_hour <-
 
       frame3<-frame3[complete.cases(frame3),]
     }
+   }else {
+
+      tabletemp<-dayconc
+
+      data_wide <- spread(tabletemp, pollen, value)
+      data_wide$location<-"All"
+      data_end<-data_wide
+      tabletemp<-as.data.frame(tabletemp)
+      for ( a in 1:length(pollens)){
+        tempo<-tabletemp[which(tabletemp$pollen==pollens[a]),]
+
+        if(nrow(tempo)==0){next}
+        for ( b in 1:nrow(tempo)){
+
+          tempo[b,"percent"]<-tempo[b,"value"]*100/table[which(table$pollen==pollens[a] & table$date==tempo[b,"date"] & table$location==tempo[b,"location"]),"value"]
+        }
+        tempo$percent<-tempo$percent/length(unique(data$Hour))
+
+        frame3<-rbind(frame3,tempo)
+      }
+
+      frame3<-frame3[complete.cases(frame3),]
+
+  }
 
     # frame3<-frame3[which(yday(frame3$date)%in%summerseries),]
 

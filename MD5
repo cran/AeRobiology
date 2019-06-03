@@ -1,12 +1,12 @@
-de7a47d79b932607ecc51e621ec2f0a2 *DESCRIPTION
+f476e65ed413d40ffccdc06b25f4c4d8 *DESCRIPTION
 8b2cf88d59c4b866942d4fc09f16d6fc *NAMESPACE
-f4bded6d7e7e3a59c736099117de88d5 *NEWS.md
+48d70b2fa261d69c6c1ad625a1b88f47 *NEWS.md
 ff6fb97a0bce3e9548d5a25529c0f5ed *R/AeRobiology.R
 c810c08f37440cb7a32ceb89b322d93d *R/POMO_pollen.R
 e570ecfc659f009862e43e0c26c9e41d *R/analyse_trend.R
 21f3f74813f7d9768fde093d5be06806 *R/calculate_ps.R
 6cb7db3f0f8938896f58a0ab01745b7d *R/credits.R
-91c2ced3c704aacae20b018e45babcb0 *R/interpollen.R
+2dac2dc8c83229a3bf05ebb6157b96fd *R/interpollen.R
 5cf43f4b266f28a5695837733677b99a *R/iplot_abundance.R
 258c4dcc21c4dcf60225249190665aa4 *R/iplot_pheno.R
 14c51c5ddcc27dba314eaf654b39047a *R/iplot_pollen.R
@@ -14,7 +14,7 @@ f52b23e88594ad3063d65a92a5afeffe *R/iplot_years.R
 a823d92237b6af2a056ed15bee5b352c *R/ma.R
 81470835715372fe69f0990d3a6cd7fa *R/munich_pollen.R
 2cd165986efb3f9ee1936d0fede71aa6 *R/plot_heathour.R
-30f80a6de0158bc96dacae52ce0a5d83 *R/plot_hour.R
+2aaa3c24bbbad435e5a1b059b8e1fae2 *R/plot_hour.R
 db778073a46fc4560fe68bf5d0acceef *R/plot_normsummary.R
 57a8a23e3fa09716c98cd0aa1d491a34 *R/plot_ps.R
 87e67272b23d8feb74d4c483c5353969 *R/plot_summary.R
@@ -24,9 +24,10 @@ db778073a46fc4560fe68bf5d0acceef *R/plot_normsummary.R
 c61a5e9f2f92830444e98fa5007b0f65 *build/vignette.rds
 a71ef42dc2fdce4a5078cb6ffe4c8e66 *data/POMO_pollen.rda
 0d93a1af74ced67e98826e14b98cbfb1 *data/munich_pollen.rda
+fb186e160305b32231fd9e442aaeef8c *inst/CITATION
 c608f0309a0f5dc65b39a4c16cf2dd3a *inst/doc/my-vignette.R
 2dbbb166ebf7dc3077ac8eebe62a6936 *inst/doc/my-vignette.Rmd
-ad918b5e853e46fc58c21911619aa566 *inst/doc/my-vignette.html
+19cbc0ef8dbb0fb3f68834cdb6fbc851 *inst/doc/my-vignette.html
 a81114feddba0fbb5cfe0d9002533702 *man/AeRobiology.Rd
 280ee6b37011265c63b8765f5cf489e8 *man/POMO_pollen.Rd
 923b70fa5ab59fb0d6d9d0bc8480f9da *man/analyse_trend.Rd
