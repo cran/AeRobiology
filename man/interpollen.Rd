@@ -4,9 +4,21 @@
 \alias{interpollen}
 \title{Interpolation of Missing Data in a Pollen Database by Different Methods}
 \usage{
-interpollen(data, method = "lineal", maxdays = 30, plot = TRUE,
-  factor = 2, ndays = 3, spar = 0.5, data2 = NULL, data3 = NULL,
-  data4 = NULL, data5 = NULL, mincorr = 0.6, result = "wide")
+interpollen(
+  data,
+  method = "lineal",
+  maxdays = 30,
+  plot = TRUE,
+  factor = 2,
+  ndays = 3,
+  spar = 0.5,
+  data2 = NULL,
+  data3 = NULL,
+  data4 = NULL,
+  data5 = NULL,
+  mincorr = 0.6,
+  result = "wide"
+)
 }
 \arguments{
 \item{data}{A \code{data.frame} object including the general database where interpollation must be performed. This \code{data.frame} must include a first column in \code{Date} format and the rest of columns in \code{numeric} format. Each column must contain information of one pollen type. It is not necessary to insert missing gaps; the function will automatically detect them.}

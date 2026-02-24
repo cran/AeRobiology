@@ -4,9 +4,18 @@
 \alias{plot_summary}
 \title{Plotting Several Pollen Seasons.}
 \usage{
-plot_summary(data, pollen, mave = 1, normalized = FALSE,
-  interpolation = TRUE, int.method = "lineal", export.plot = FALSE,
-  export.format = "pdf", axisname = "Pollen grains / m3", ...)
+plot_summary(
+  data,
+  pollen,
+  mave = 1,
+  normalized = FALSE,
+  interpolation = TRUE,
+  int.method = "lineal",
+  export.plot = FALSE,
+  export.format = "pdf",
+  axisname = "Pollen grains / m3",
+  ...
+)
 }
 \arguments{
 \item{data}{A \code{data.frame} object. This \code{data.frame} should include a first column in format \code{Date} and the rest of columns in format \code{numeric} belonging to each pollen type by column.}

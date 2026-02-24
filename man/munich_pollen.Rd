@@ -4,7 +4,9 @@
 \name{munich_pollen}
 \alias{munich_pollen}
 \title{Pollen data of Munich (2010_2015)}
-\format{Time series of daily pollen concentrations expressed as pollen grains / m3 of air.}
+\format{
+Time series of daily pollen concentrations expressed as pollen grains / m3 of air.
+}
 \source{
 \url{https://www.zaum-online.de/}
 }

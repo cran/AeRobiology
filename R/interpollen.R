@@ -50,9 +50,18 @@ interpollen <-
            data5=NULL,
            mincorr=0.6,
            result="wide") {
-    if(class(maxdays)!="numeric"){stop("maxday: Please, insert an entire number bigger than 1")}
-    if(class(maxdays)!="numeric"| maxdays%%1!=0| maxdays<=0){stop("maxday: Please insert an entire number bigger than 1")}
-    if(class(method)!="character"){stop("method: Please, only type 'lineal' , 'movingmean' or 'spline'")}
+    # --- argument checks (FIXED) ---
+    if (!is.numeric(maxdays) || length(maxdays) != 1L || is.na(maxdays)) {
+      stop("maxdays: Please, insert a single numeric value")
+    }
+    if (maxdays %% 1 != 0 || maxdays <= 1) {
+      stop("maxdays: Please, insert an entire number bigger than 1")
+    }
+    
+    if (!is.character(method) || length(method) != 1L || is.na(method)) {
+      stop("method: Please, only type 'lineal', 'movingmean', 'spline', 'tseries' or 'neighbour'")
+    }
+    if(!is.character(method)){stop("method: Please, only type 'lineal' , 'movingmean' or 'spline'")}
     if (method != "lineal" &
         method != "movingmean" &
         method != "spline" & method != "neighbour" & method != "tseries"){
@@ -63,32 +72,34 @@ interpollen <-
     if (plot != TRUE &
         plot != FALSE){
       stop("plot: Please, only type 'TRUE' or 'FALSE'")}
-    if (class(factor) != "numeric"){
+    if (!is.numeric(factor)){
       stop("factor: Please, insert only a number bigger than 1")}
     if (factor <= 1){
       stop("factor: Please, insert only a number bigger than 1")}
-    if (class(ndays)!="numeric" | ndays %% 1 != 0){
-      stop("ndays:Please, insert only an entire number bigger than 1")}
-    if (class(spar)!="numeric" | spar <= 0 |
+    if (!is.numeric(ndays) || length(ndays) != 1 || is.na(ndays) || ndays %% 1 != 0) {
+      stop("ndays: Please, insert a single integer number")
+    }
+    if (ndays < 2) {
+      stop("ndays: Please, insert an entire number bigger than 1")
+    }
+    if (!is.numeric(spar) | spar <= 0 |
         spar > 1){
       stop("spar: Please, insert only a number between 0 (not included) and 1")}
-    if (ndays <= 0){
-      stop("ndays: Please, insert only an entire number bigger than 1")}
     if (ndays >= 15){
       warning("WARNING: Results of spline may not be reliable with more than 15 days")}
     if(mincorr<0 | mincorr>1){stop("mincorr: Please insert only a number between 0 and 1 ")}
 
     data<-data.frame(data)
     colnames(data)[1]<-"date"
-    if (class(data) != "data.frame"& !is.null(data)){
+    if (!is.data.frame(data)& !is.null(data)){
       stop ("Please, include a data.frame: first column with date, and the rest with pollen types")}
-    if (class(data2) != "data.frame" & !is.null(data2)){
+    if (!is.data.frame(data2) & !is.null(data2)){
       stop ("data2: Please, include a data.frame: first column with date, and the rest with pollen types")}
-    if (class(data3) != "data.frame"& !is.null(data3)){
+    if (!is.data.frame(data3)& !is.null(data3)){
       stop ("data3: Please, include a data.frame: first column with date, and the rest with pollen types")}
-    if (class(data4) != "data.frame"& !is.null(data4)){
+    if (!is.data.frame(data4)& !is.null(data4)){
       stop ("data4: Please, include a data.frame: first column with date, and the rest with pollen types")}
-    if (class(data5) != "data.frame" & !is.null(data5)){
+    if (!is.data.frame(data5) & !is.null(data5)){
       stop ("data5: Please, include a data.frame: first column with date, and the rest with pollen types")}
     if (method=="neighbour" & is.null(data2)){stop("You need at least another station loaded in 'data2' to use this method")}
     if(class(data[,1])[1]!="Date" & !is.POSIXt(data[,1])) {stop("Please the first column of your data must be the date in 'Date' format")}
@@ -369,7 +380,7 @@ interpollen <-
                   Active_column<-columnas[x]
                   if(anyNA(gooddata[,Active_column])){regresion<-regresion[,-which(colnames(regresion)==Active_column)]}
                 }
-                if(class(regresion)=="data.frame"){
+                if(is.data.frame(regresion)){
                   modelo<-lm(station1~.+0, data = regresion)
                   prediccion$Pollen<- predict.lm(modelo, gooddata[,-1])
                 }

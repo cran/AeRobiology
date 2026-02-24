@@ -2,9 +2,19 @@
 % Please edit documentation in R/AeRobiology.R
 \docType{package}
 \name{AeRobiology}
-\alias{AeRobiology}
 \alias{AeRobiology-package}
+\alias{AeRobiology}
 \title{\code{AeRobiology} package}
 \description{
 AeRobiology computational tool
+}
+\author{
+\strong{Maintainer}: Jose Oteros \email{OterosJose@gmail.com}
+
+Authors:
+\itemize{
+  \item Jesus Rojo \email{Jesus.Rojo@uclm.es}
+  \item Antonio Picornell \email{picornell@uma.es}
+}
+
 }

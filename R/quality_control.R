@@ -67,14 +67,14 @@ quality_control<-function(data,
                          int.method = "lineal",
                          ...){
   data<-data.frame(data)
-  if (class(data) != "data.frame"& !is.null(data)){
+  if (!is.data.frame(data)& !is.null(data)){
     stop ("Please include a data.frame: first column with date, and the rest with pollen types")}
   if(class(data[,1])[1]!="Date" & !is.POSIXt(data[,1])) {stop("Please the first column of your data must be the date in 'Date' format")}
   data[,1]<-as.Date(data[,1])
-  if(class(int.window)!="numeric" | int.window %% 1 != 0){stop("int.window: Please, insert only an entire number bigger than 1")}
+  if(is.numeric(int.window)!="numeric" | int.window %% 1 != 0){warning("int.window adjusted to 2 (must be an integer > 1)."); int.window <- 2}
   if(int.window<1){stop("int.window: Please, insert only an entire number bigger or equal to 1")}
-  if(class(perc.miss)!="numeric"){stop("perc.miss: Please, insert only a number between 0 and 100")}
-  if(perc.miss<0 | perc.miss > 100){stop("perc.miss: Please, insert only a number between 0 and 100")}
+  if(!is.numeric(perc.miss)){stop("perc.miss: Please, insert a number between 0 and 100")}
+  if(perc.miss<0 | perc.miss > 100){stop("perc.miss: Please, insert a number between 0 and 100")}
   if(result!="plot" & result!="table"){stop("result: Please, insert only 'plot' or 'table'.")}
 
   Pollen<-calculate_ps(data=data, method=ps.method, th.day=th.day, perc=perc, def.season=def.season, reduction=reduction, red.level=red.level, derivative=derivative, man=man, th.ma=th.ma, n.clinical=n.clinical, window.clinical=window.clinical, window.grains=window.grains, th.pollen=th.pollen, th.sum=th.sum, type=type, interpolation=TRUE, int.method=int.method, plot=FALSE, maxdays = 300 )

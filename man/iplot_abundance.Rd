@@ -4,10 +4,21 @@
 \alias{iplot_abundance}
 \title{Plot of the Relative Abundance of the Pollen Types}
 \usage{
-iplot_abundance(data, n.types = 15, y.start = NULL, y.end = NULL,
-  interpolation = TRUE, int.method = "lineal", col.bar = "#E69F00",
-  type.plot = "static", result = "plot", export.plot = FALSE,
-  export.format = "pdf", exclude = NULL, ...)
+iplot_abundance(
+  data,
+  n.types = 15,
+  y.start = NULL,
+  y.end = NULL,
+  interpolation = TRUE,
+  int.method = "lineal",
+  col.bar = "#E69F00",
+  type.plot = "static",
+  result = "plot",
+  export.plot = FALSE,
+  export.format = "pdf",
+  exclude = NULL,
+  ...
+)
 }
 \arguments{
 \item{data}{A \code{data.frame} object including the general database where calculation of the pollen season must be applied. This \code{data.frame} must include a first column in \code{Date} format and the rest of columns in \code{numeric} format belonging to each pollen type by column.}

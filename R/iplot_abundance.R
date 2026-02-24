@@ -58,34 +58,37 @@ iplot_abundance <- function (data,
                              exclude = NULL,
                              ...){
 
+  base_dir <- if (nzchar(Sys.getenv("_R_CHECK_PACKAGE_NAME_"))) tempdir() else "."
+  plot_dir <- file.path(base_dir, "plot_AeRobiology")
+  
 #############################################    CHECK THE ARGUMENTS       #############################
 
-  if(export.plot == TRUE){ifelse(!dir.exists(file.path("plot_AeRobiology")), dir.create(file.path("plot_AeRobiology")), FALSE)}
+  if (isTRUE(export.plot)) dir.create(plot_dir, recursive = TRUE, showWarnings = FALSE)
 
   data<-data.frame(data)
-  if(class(data) != "data.frame") stop ("Please include a data.frame: first column with date, and the rest with pollen types")
+  if(!is.data.frame(data)) stop ("Please include a data.frame: first column with date, and the rest with pollen types")
 
-  if(class(n.types) != "numeric") stop ("Please include only numeric values for 'n.types' argument indicating the number of pollen types which will be displayed")
+  if(!is.numeric(n.types)) stop ("Please include only numeric values for 'n.types' argument indicating the number of pollen types which will be displayed")
 
-  if(class(y.start) != "numeric" & !is.null(y.start)) stop ("Please include only numeric values for y.start argument indicating the start year considered")
+  if(!is.numeric(y.start) & !is.null(y.start)) stop ("Please include only numeric values for y.start argument indicating the start year considered")
 
-  if(class(y.end) != "numeric" & !is.null(y.end)) stop ("Please include only numeric values for 'y.end' argument indicating the end year considered")
+  if(!is.numeric(y.end) & !is.null(y.end)) stop ("Please include only numeric values for 'y.end' argument indicating the end year considered")
 
-  if(class(interpolation) != "logical") stop ("Please include only logical values for interpolation argument")
+  if(!is.logical(interpolation)) stop ("Please include only logical values for interpolation argument")
 
   if(int.method != "lineal" & int.method != "movingmean" & int.method != "spline" & int.method != "tseries") stop ("Please int.method only accept values: 'lineal', 'movingmean', 'spline' or 'tseries'")
 
-  if(class(col.bar) != "character") stop ("Please include only character values indicating the color selected in the bars for generating the plot")
+  if(!is.character(col.bar)) stop ("Please include only character values indicating the color selected in the bars for generating the plot")
 
   if(type.plot != "static" & type.plot != "dynamic") stop ("Please type.plot only accept values: 'static' or 'dynamic'")
 
   if(result != "plot" & result != "table") stop ("Please result only accept values: 'plot' or 'table'")
 
-  if(class(export.plot) != "logical") stop ("Please include only logical values for export.plot argument")
+  if(!is.logical(export.plot)) stop ("Please include only logical values for export.plot argument")
 
   if(export.format != "pdf" & export.format != "png") stop ("Please export.format only accept values: 'pdf' or 'png'")
 
-  if(class(exclude) != "character" & !is.null(exclude)) stop ("Please include only character values for exclude argument indicating the pollen type to be excluded")
+  if(!is.character(exclude) & !is.null(exclude)) stop ("Please include only character values for exclude argument indicating the pollen type to be excluded")
 
   if(class(data[,1])[1]!="Date" & !is.POSIXt(data[,1])) {stop("Please the first column of your data must be the date in 'Date' format")}
   data[,1]<-as.Date(data[,1])
@@ -153,16 +156,16 @@ plot.abundance <- ggplot(mean.perc, aes(x = types, y = mean)) +
   theme(axis.title.y = element_blank(), axis.title.x = element_text(size=10, face="bold"), axis.text.y = element_text(size=10, face="bold.italic"), axis.text = element_text(size=10), title=element_text(size=10, face="bold"), plot.title = element_text(hjust = 0.5, size = 16))
 
 if(export.plot == TRUE & type.plot == "static" & export.format == "png") {
-  png(paste0("plot_AeRobiology/abundance_plot", y.start, "-", y.end, ".png"), ...)
+  png(file.path(plot_dir, paste0("abundance_plot", y.start, "-", y.end, ".png")), ...)
     plot(plot.abundance)
   dev.off()
-  png(paste0("plot_AeRobiology/credits.png"))
+  png(file.path(plot_dir, "credits.png"))
 
   dev.off()
 }
 
 if(export.plot == TRUE & type.plot == "static" & export.format == "pdf") {
-  pdf(paste0("plot_AeRobiology/abundance_plot", y.start, "-", y.end, ".pdf"), ...)
+  pdf(file.path(plot_dir, paste0("abundance_plot", y.start, "-", y.end, ".pdf")), ...)
     plot(plot.abundance)
 
   dev.off()

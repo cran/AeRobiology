@@ -231,7 +231,7 @@ i3<-interpollen(munich_pollen[,c(1,6)], method="spline", ndays=5, spar=0.2, plot
 ```
 
 ### <font face="verdana">"tseries"</font> method
-If you have long time series of data, this might be the most suitable method for you. This method **analyses the time series of the pollen/spore database and performs a seasonal-trend decomposition based on LOESS** ([Cleveland et al., 1990](http://www.nniiem.ru/file/news/2016/stl-statistical-model.pdf)). It extracts the **seasonality of the historical database** and uses it to predict the missing data by performing a linear regression with the target year.
+If you have long time series of data, this might be the most suitable method for you. This method **analyses the time series of the pollen/spore database and performs a seasonal-trend decomposition based on LOESS** ([Cleveland et al., 1990](https://www.scirp.org/reference/referencespapers?referenceid=1891917)). It extracts the **seasonality of the historical database** and uses it to predict the missing data by performing a linear regression with the target year.
 
 ```{r echo=TRUE, results='hide', fig.keep='last'}
 i4<-interpollen(munich_pollen, method="tseries", plot = TRUE)
@@ -282,7 +282,7 @@ The function **<font size="3" face="verdana">calculate_ps()</font>** is one of t
 * **plot**: A `logical` value specifying if the plots are generated in the plot history. The `plot` argument will be `TRUE` by default.
 * **result**: A `character` string specifying the output for the function. The implemented outputs that may be obtained are: `"table"` and `"list"`. The argument `result` will be `"table"` by default.
 
-<div class="alert alert-info">**IMPORTANT :** if `export.plot=TRUE`, the plots are **EXPORTED** in "plot_AeRobiology" folder.</div>
+<div class="alert alert-info">**IMPORTANT :** if `export.plot = FALSE`, the plots are **EXPORTED** in "plot_AeRobiology" folder.</div>
   
   
 ## Methods of calculating the Main Pollen Season
@@ -311,7 +311,7 @@ This function allows to calculate the pollen season using **five different metho
 * **en.dt.hs**: end_date of the High pollen season (date, only for clinical method)
 * **en.jd.hs**: end_date of the High pollen season (day of the year, only for clinical method)
 
-<div class="alert alert-info">**IMPORTANT :** If `export.result=TRUE`, these objects will be exported as xlsx file within the "table_AeRobiology" directory created in your working directory. This Excel file will have a sheet for each pollen type and a last sheet with the legend of all the abbreviations and the method selected to calculate them. **We strongly recommend to use `export.result=TRUE`**</div>
+<div class="alert alert-info">**IMPORTANT :** If `export.result = FALSE`, these objects will be exported as xlsx file within the "table_AeRobiology" directory created in your working directory. This Excel file will have a sheet for each pollen type and a last sheet with the legend of all the abbreviations and the method selected to calculate them. **We strongly recommend to use `export.result = FALSE`**</div>
 
 Although the results can be extracted in the working directory in a xlsx file, **they can also be assigned to an object, and visualized**, for example (an extract):
 
@@ -331,13 +331,13 @@ calculate_ps(munich_pollen[,c(1,6)], plot = TRUE)
 
 ### "percentage" method
 
-This is a commonly used method for defining the pollen season based on the **elimination of a certain percentage in the beginning and the end of the pollen season** ( [Nilsson and Persson, 1981](https://www.tandfonline.com/doi/abs/10.1080/00173138109427661); [Andersen, 1991](https://www.tandfonline.com/doi/pdf/10.1080/00173139109427810)). For example, if the pollen season is based on the 95% of the total annual pollen (`perc = 95`), the start_date of the pollen season is marked as the day in which 2.5% of the total pollen is registered and the end_date of the pollen season is marked as the day in which 97.5% of the total pollen is registered.
+This is a commonly used method for defining the pollen season based on the **elimination of a certain percentage in the beginning and the end of the pollen season** ( [Nilsson and Persson, 1981](https://doi.org/10.1080/00173138109427661); [Andersen, 1991](https://doi.org/10.1080/00173139109427810). For example, if the pollen season is based on the 95% of the total annual pollen (`perc = 95`), the start_date of the pollen season is marked as the day in which 2.5% of the total pollen is registered and the end_date of the pollen season is marked as the day in which 97.5% of the total pollen is registered.
 
 ```{r echo=TRUE, results='hide', fig.keep='first', eval=FALSE}
-calculate_ps(munich_pollen[,c(1,6)], method = "percentage", perc = 90, export.result = TRUE)
+calculate_ps(munich_pollen[,c(1,6)], method = "percentage", perc = 90, export.result = FALSE)
 ```
 
-In this case we have calculated the main pollen season based on the 90% of the total annual pollen. **Results are stored in the "table_AeRobiology" folder since `export.result=TRUE`**.
+In this case we have calculated the main pollen season based on the 90% of the total annual pollen. **Results are stored in the "table_AeRobiology" folder since `export.result = FALSE`**.
 
 You can select different methods of interpolation or even to not interpolate gaps:
 
@@ -349,12 +349,12 @@ calculate_ps(munich_pollen[,c(1,6)], method = "percentage", perc = 90, export.re
 calculate_ps(munich_pollen[,c(1,6)], method = "percentage", perc = 75, export.result = FALSE, interpolation = FALSE)
 ```
 
-<div class="alert alert-info">**IMPORTANT :** if `export.plot=TRUE`, the plots are **EXPORTED** in "plot_AeRobiology" folder.</div>
+<div class="alert alert-info">**IMPORTANT :** if `export.plot = FALSE`, the plots are **EXPORTED** in "plot_AeRobiology" folder.</div>
 
 
 ### "logistic" method
 
-This method was developed by Ribeiro et al. (2007) and modified by Cunha et al. (2015). It is based on fitting annually a **non-linear logistic regression model** to the daily accumulated curve for each pollen type. This logistic function and the **different derivatives** were considered to calculate the **start_date** and **end_date** of the pollen season, based on the **asymptotes when pollen amounts are stabilized on the beginning and the end of the accumulated curve**. For more information about the method, see [Ribeiro et al. (2007)](https://www.ncbi.nlm.nih.gov/pubmed/18247462) and [Cunha et al. (2015)](https://link.springer.com/article/10.1007%2Fs10453-014-9345-3). **Three different derivatives** may be used (`derivative` argument) 4, 5 or 6 that represent **from higher to lower restrictive criterion** for defining the pollen season. 
+This method was developed by Ribeiro et al. (2007) and modified by Cunha et al. (2015). It is based on fitting annually a **non-linear logistic regression model** to the daily accumulated curve for each pollen type. This logistic function and the **different derivatives** were considered to calculate the **start_date** and **end_date** of the pollen season, based on the **asymptotes when pollen amounts are stabilized on the beginning and the end of the accumulated curve**. For more information about the method, see [Ribeiro et al. (2007)](https://pubmed.ncbi.nlm.nih.gov/18247462/) and [Cunha et al. (2015)](https://link.springer.com/article/10.1007/s10453-014-9345-3). **Three different derivatives** may be used (`derivative` argument) 4, 5 or 6 that represent **from higher to lower restrictive criterion** for defining the pollen season. 
 
 This method may be **complemented with an optional method for reduction the peaks values** (`reduction = TRUE`), thus avoiding the effect of the great influence of extreme peaks. In this sense, **peaks values will be cut below a certain level** that the user may select based on a percentile analysis of peaks. For example, `red.level = 0.90` will cut all peaks above the percentile 90.
 
@@ -378,11 +378,11 @@ knitr::kable(pollen_season, format = "html", booktabs = TRUE)
 
 As you can observe, results are a bit different.
 
-<div class="alert alert-info">**IMPORTANT :** if `export.plot=TRUE`, the plots are **EXPORTED** in "plot_AeRobiology" folder.</div>
+<div class="alert alert-info">**IMPORTANT :** if `export.plot = FALSE`, the plots are **EXPORTED** in "plot_AeRobiology" folder.</div>
 
 ### "clinical" method
 
-This method was proposed by [Pfaar et al. (2017)](https://www.ncbi.nlm.nih.gov/pubmed/27874202). It is based on the expert consensus in relation to pollen exposure and the **relationship with allergic symptoms** derived of the literature. 
+This method was proposed by [Pfaar et al. (2017)](https://pubmed.ncbi.nlm.nih.gov/27874202/). It is based on the expert consensus in relation to pollen exposure and the **relationship with allergic symptoms** derived of the literature. 
 
 Different periods may be defined by this method: the **pollen season**, the **high pollen season** and the **high pollen days**: 
 
@@ -390,7 +390,7 @@ Different periods may be defined by this method: the **pollen season**, the **hi
 
 2) The **start_date** and **end_date** of the **high pollen season** were defined as **three consecutive days exceeding a certain pollen threshold (`th.day` argument)**. 
 
-3) The number of **high pollen days** will also be calculated exceeding this pollen threshold (`th.day`). For more information about the method, see [Pfaar et al. (2017)](https://www.ncbi.nlm.nih.gov/pubmed/27874202).
+3) The number of **high pollen days** will also be calculated exceeding this pollen threshold (`th.day`). For more information about the method, see [Pfaar et al. (2017)](https://pubmed.ncbi.nlm.nih.gov/27874202/).
 
 Running the following example, the main pollen season will be established according to the birch requirements: more than 5 days within a week in which more than 10 pollen grains/m3 are registered and whose sum exceeds 100 pollen grains/m3. The high pollen days are those which exceed 100 pollen grains/m3 (`n.clinical=5, window.clinical=7, th.pollen=10, th.sum=100, th.day=100`)
 
@@ -414,7 +414,7 @@ knitr::kable(pollen_season, format = "html", booktabs = TRUE)
 
 We have resumed all these parameters under the argument `type=birch` to facilitate its application.
 
-<div class="alert alert-info">**IMPORTANT :** if **`export.plot=TRUE`**, the plots are **EXPORTED** in "plot_AeRobiology" folder.</div>
+<div class="alert alert-info">**IMPORTANT :** if **`export.plot = FALSE`**, the plots are **EXPORTED** in "plot_AeRobiology" folder.</div>
 
 ### "grains" method
 
@@ -438,7 +438,7 @@ The definition of the pollen season is based on the application of a **moving av
 
 You might understand it better by consulting the plots obtained.
 
-<div class="alert alert-info">**IMPORTANT :** if **`export.plot=TRUE`**, the plots are **EXPORTED** in "plot_AeRobiology" folder.</div>
+<div class="alert alert-info">**IMPORTANT :** if **`export.plot = FALSE`**, the plots are **EXPORTED** in "plot_AeRobiology" folder.</div>
 
 Let's calculate it with a moving average of 7 days. We are going to establish the start and end of the main pollen season when the moving average reaches 4 pollen grains/m3:
 
@@ -504,10 +504,10 @@ This function **calculates the pollen calendar from a historical database** of s
 
 **Data exportation:**
 
-- If `export.plot = TRUE` this plot displaying the pollen calendar will be exported within the **Plot_AeRobiology** directory created in the working directory.
-- If `export.plot = TRUE` and `export.format = pdf`, a pdf file with the pollen calendar will be saved within the **plot_AeRobiology** directory, created in the working directory. Additional characteristics
+- If `export.plot = FALSE` this plot displaying the pollen calendar will be exported within the **Plot_AeRobiology** directory created in the working directory.
+- If `export.plot = FALSE` and `export.format = pdf`, a pdf file with the pollen calendar will be saved within the **plot_AeRobiology** directory, created in the working directory. Additional characteristics
 may be incorporated to the exportation as pdf file.
-- If `export.plot = TRUE` and `export.format = png`, a png file with the pollen calendar will be saved within the **plot_AeRobiology** directory, created in the working directory. Additional characteristics may be incorporated to the exportation as png file.
+- If `export.plot = FALSE` and `export.format = png`, a png file with the pollen calendar will be saved within the **plot_AeRobiology** directory, created in the working directory. Additional characteristics may be incorporated to the exportation as png file.
 
 **Exclusive arguments** for pollen calendars generated as **"heatplot"**:
 
@@ -680,7 +680,7 @@ plot_normsummary(munich_pollen, pollen = "Betula", color.plot = "green", mave = 
 
 The function **<font size="3" face="verdana">analyse_trend()</font>** has been created to calculate the main seasonal indexes of the pollen season ("Start Date", "Peak Date", "End Date" and "Pollen Integral"), as well as **trends analysis** of those parameters over the seasons. It is a summary dot plot showing the distribution of the main seasonal indexes over the years.  
 
-The results can also be stored in two folders termed **"plot_AeRobiology"** and **"table_AeRobiology"**, which will be created in your working directory (only if `export.result=TRUE` & `export.plot=TRUE`). You can decide which result to be returned from the function by setting the argument **result**: *result = "table"* or *result = "plot"*.
+The results can also be stored in two folders termed **"plot_AeRobiology"** and **"table_AeRobiology"**, which will be created in your working directory (only if `export.result = FALSE` & `export.plot = FALSE`). You can decide which result to be returned from the function by setting the argument **result**: *result = "table"* or *result = "plot"*.
 
 The function allows you to decide if you want to interpolate the data or not, by the argument **`interpolation`**, it also allows you to select the interpolation method by the argument **`int.method`**. Furthermore, it allows you to select the pollen season definition method, by the argument **`method`** and additional arguments for the function **<font size="3" face="verdana">calculate_ps()</font>**. Some arguments about the visualization are:  
 
@@ -732,10 +732,10 @@ analyse_trend(munich_pollen, interpolation = FALSE, export.result = FALSE, expor
 
 The function **<font size="3" face="verdana">plot_trend()</font>** has been created to calculate the main seasonal indexes of the pollen season ("Start Date", "Peak Date", "End Date" and "Pollen Integral") and their trends analysis over the seasons. It produces plots showing the distribution of the main seasonal indexes over the years.  
 
-The **results are stored in two folders termed "plot_AeRobiology" and "table_AeRobiology"** which will be located in your working directory (only if `export.result=TRUE` & `export.plot=TRUE`).
+The **results are stored in two folders termed "plot_AeRobiology" and "table_AeRobiology"** which will be located in your working directory (only if `export.result = FALSE` & `export.plot = FALSE`).
 
 ```{r echo = TRUE, results='hide',fig.keep='all', eval=FALSE}
-plot_trend(munich_pollen, interpolation = FALSE, export.plot = TRUE, export.result = TRUE)
+plot_trend(munich_pollen, interpolation = FALSE, export.plot = FALSE, export.result = FALSE)
 ```
 
 <div class="alert alert-info">**NOTE:** The plots are not shown in your R environment. Because of the high amount of graphs, they are stored in new folders created in your working directory (search were you have saved the R project and you will find the folders).</div>

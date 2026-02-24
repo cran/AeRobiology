@@ -3,6 +3,8 @@
 #' Function to calculate the main seasonal indexes of the pollen season (\emph{Start Date}, \emph{Peak Date}, \emph{End Date} and \emph{Pollen Integral}). Trends analysis of the parameters over the seasons. Plots showing the distribution of the main seasonal indexes over the years.
 #'
 #' @param data A \code{data.frame} object. This \code{data.frame} should include a first column in format \code{Date} and the rest of columns in format \code{numeric} belonging to each pollen type by column.
+#' @param base_dir Character. Base directory where output tables are stored.
+#' @param table_dir Character. Directory where tables are exported.
 #' @param interpolation A \code{logical} value specifying if the visualization shows the gaps in the inputs data (\code{interpolation = FALSE}) or if an interpolation method is used for filling the gaps (\code{interpolation = TRUE}). By default, \code{interpolation = TRUE}.
 #' @param int.method A \code{character} string with the name of the interpolation method to be used. The implemented methods that may be used are: \code{"lineal"}, \code{"movingmean"}, \code{"tseries"} or \code{"spline"}. By default, \code{int.method = "lineal"}.
 #' @param export.plot A \code{logical} value specifying if a plot will be exported or not. If \code{FALSE} graphical results will only be displayed in the active graphics window. If \code{TRUE} graphical results will be displayed in the active graphics window and also one pdf/png file will be saved within the \emph{plot_AeRobiology} directory automatically created in the working directory. By default, \code{export.plot = TRUE}.
@@ -26,33 +28,43 @@
 #' @importFrom writexl write_xlsx
 #' @importFrom tidyr %>%
 #' @export
+
 plot_trend  <-   function   (data,
-                            interpolation = TRUE,
-                            int.method = "lineal",
-                            export.plot = TRUE,
-                            export.format = "pdf",
-                            export.result=TRUE,
-                            method="percentage",
-                            ...){
+              base_dir = getwd(),
+              table_dir = file.path(base_dir, "table_AeRobiology"),
+              interpolation = TRUE,
+              int.method = "lineal",
+              export.plot = TRUE,
+              export.format = "pdf",
+              export.result=TRUE,
+              method="percentage",
+              ...){
 
   # Sys.setlocale(category = "LC_ALL", locale="english")
+  
+  # Base directory: during R CMD check, write into a temp folder, not the package/check dir
+  base_dir <- if (nzchar(Sys.getenv("_R_CHECK_PACKAGE_NAME_"))) tempdir() else "."
+  plot_dir <- file.path(base_dir, "plot_AeRobiology")
+  trend_plot_dir <- file.path(plot_dir, "trend_plots")
 
   #############################################    CHECK THE ARGUMENTS       #############################
 
   if(export.plot == TRUE){ifelse(!dir.exists(file.path("plot_AeRobiology")), dir.create(file.path("plot_AeRobiology")), FALSE)}
-  if(export.plot == TRUE){ifelse(!dir.exists(file.path("plot_AeRobiology/trend_plots")), dir.create(file.path("plot_AeRobiology/trend_plots")), FALSE)}
-  if(export.result == TRUE){ifelse(!dir.exists(file.path("table_AeRobiology")), dir.create(file.path("table_AeRobiology")), FALSE)}
+  if (isTRUE(export.plot)) {
+    dir.create(trend_plot_dir, recursive = TRUE, showWarnings = FALSE)
+  }
+  if (isTRUE(export.result)) { if (!dir.exists(table_dir)) dir.create(table_dir, recursive = TRUE) }
   data<-data.frame(data)
-  if(class(data) != "data.frame") stop ("Please include a data.frame: first column with date, and the rest with pollen types")
+  if(!is.data.frame(data)) stop ("Please include a data.frame: first column with date, and the rest with pollen types")
 
-  if(class(export.plot) != "logical") stop ("Please include only logical values for export.plot argument")
+  if(!is.logical(export.plot)) stop ("Please include only logical values for export.plot argument")
 
   if(export.format != "pdf" & export.format != "png") stop ("Please export.format only accept values: 'pdf' or 'png'")
 
   if(class(data[,1])[1]!="Date" & !is.POSIXt(data[,1])) {stop("Please the first column of your data must be the date in 'Date' format")}
   data[,1]<-as.Date(data[,1])
 
-  if(class(interpolation) != "logical") stop ("Please include only logical values for interpolation argument")
+  if(!is.logical(interpolation)) stop ("Please include only logical values for interpolation argument")
 
   # if(int.method != "lineal" & int.method != "movingmean" & int.method != "spline" & int.method != "tseries") stop ("Please int.method only accept values: 'lineal', 'movingmean', 'tseries' or 'spline'")
 
@@ -63,7 +75,7 @@ plot_trend  <-   function   (data,
 
   ## Function for p value
   lmp <- function (modelobject) {
-    if (class(modelobject) != "lm") stop("Not an object of class 'lm' ")
+    if (!inherits(modelobject, "lm")) stop("Not an object of class 'lm' ")
     f <- summary(modelobject)$fstatistic
     p <- pf(f[1],f[2],f[3],lower.tail=F)
     attributes(p) <- NULL
@@ -232,7 +244,7 @@ datafram<-datafram[complete.cases(datafram),]
 
 
  if(export.plot == TRUE  & export.format == "png") {
-   png(paste0("plot_AeRobiology/trend_plots/plot_trend_",pollen,".png"))
+   png(file.path(trend_plot_dir, paste0("plot_trend_", pollen, ".png")))
    pushViewport(viewport(layout=grid.layout(2,2)))
    vplayout<-function(x,y) viewport(layout.pos.row = x, layout.pos.col=y)
    print(p1, vp = vplayout(1,1))
@@ -244,7 +256,7 @@ datafram<-datafram[complete.cases(datafram),]
  }
 
  if(export.plot == TRUE  & export.format == "pdf") {
-   pdf(paste0("plot_AeRobiology/trend_plots/plot_trend_",pollen, ".pdf"))
+   pdf(file.path(trend_plot_dir, paste0("plot_trend_", pollen, ".pdf")))
    pushViewport(viewport(layout=grid.layout(2,2)))
    vplayout<-function(x,y) viewport(layout.pos.row = x, layout.pos.col=y)
    print(p1, vp = vplayout(1,1))
@@ -270,7 +282,7 @@ lista [["Information"]] <- data.frame(
 
 
 if (export.result == TRUE) {
-  write_xlsx(lista, "table_AeRobiology/summary_of_plot_trend.xlsx")
+  write_xlsx(lista, file.path(table_dir, "summary_of_plot_trend.xlsx"))
 }
 return(trendtime)
 }

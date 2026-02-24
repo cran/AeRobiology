@@ -4,14 +4,31 @@
 \alias{pollen_calendar}
 \title{Pollen Calendar by Different Methods from a Historical Pollen Database}
 \usage{
-pollen_calendar(data, method = "heatplot", n.types = 15,
-  start.month = 1, y.start = NULL, y.end = NULL, perc1 = 80,
-  perc2 = 99, th.pollen = 1, average.method = "avg_before",
-  period = "daily", method.classes = "exponential", n.classes = 5,
-  classes = c(25, 50, 100, 300), color = "green",
-  interpolation = TRUE, int.method = "lineal", na.remove = TRUE,
-  result = "plot", export.plot = FALSE, export.format = "pdf",
-  legendname = "Pollen grains / m3", ...)
+pollen_calendar(
+  data,
+  method = "heatplot",
+  n.types = 15,
+  start.month = 1,
+  y.start = NULL,
+  y.end = NULL,
+  perc1 = 80,
+  perc2 = 99,
+  th.pollen = 1,
+  average.method = "avg_before",
+  period = "daily",
+  method.classes = "exponential",
+  n.classes = 5,
+  classes = c(25, 50, 100, 300),
+  color = "green",
+  interpolation = TRUE,
+  int.method = "lineal",
+  na.remove = TRUE,
+  result = "plot",
+  export.plot = FALSE,
+  export.format = "pdf",
+  legendname = "Pollen grains / m3",
+  ...
+)
 }
 \arguments{
 \item{data}{A \code{data.frame} object including the general database where calculation of the pollen calendar must be applied. This \code{data.frame} must include a first column in \code{Date} format and the rest of columns in \code{numeric} format belonging to each pollen type by column.}

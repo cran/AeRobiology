@@ -20,9 +20,9 @@
 plot_hour <-
   function (data, result="plot", locations = FALSE) {
     data<-data.frame(data)
-    if(class(data) != "data.frame") stop ("Please include a data.frame: first column with factor indicating the pollen, second column with factor indicating the locaiton, third column with POSIXct indicating the (from), fourth column with POSIXct indicating the (to) and fifth column with numbers indicating the concentration")
+    if(!is.data.frame(data)) stop ("Please include a data.frame: first column with factor indicating the pollen, second column with factor indicating the locaiton, third column with POSIXct indicating the (from), fourth column with POSIXct indicating the (to) and fifth column with numbers indicating the concentration")
     if(result != "plot" & result != "table") stop ("Please result only accept values: 'table' or 'plot'")
-    if(class(locations) != "logical") stop ("Please include only logical values for locations argument")
+    if(!is.logical(locations)) stop ("Please include only logical values for locations argument")
 
     colnames(data)<-c("pollen","location","from","to","value")
 # HOUR = percent = location = NULL

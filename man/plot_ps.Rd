@@ -4,9 +4,16 @@
 \alias{plot_ps}
 \title{Pollen Season Plot}
 \usage{
-plot_ps(data, pollen.type = NULL, year = NULL, days = 30,
-  fill.col = "turquoise4", int.method = "lineal",
-  axisname = expression(paste("Pollen grains / m"^"3")), ...)
+plot_ps(
+  data,
+  pollen.type = NULL,
+  year = NULL,
+  days = 30,
+  fill.col = "turquoise4",
+  int.method = "lineal",
+  axisname = expression(paste("Pollen grains / m"^"3")),
+  ...
+)
 }
 \arguments{
 \item{data}{A \code{data.frame} object including the general database where interpollation must be performed. This \code{data.frame} must include a first column in \code{Date} format and the rest of columns in \code{numeric} format. Each column must contain information of one pollen type. It is not necessary to insert missing gaps; the function will automatically detect them.}

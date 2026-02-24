@@ -21,18 +21,18 @@ plot_heathour <-
             mid.col = "white",
             high.col = "red") {
     data <- data.frame(data)
-    if (class(data) != "data.frame"){
+    if (!is.data.frame(data)){
       stop (
         "Please include a data.frame: first column with factor indicating the pollen, second column with factor indicating the locaiton, third column with POSIXct indicating the (from), fourth column with POSIXct indicating the (to) and fifth column with numbers indicating the concentration"
       )}
 
-    if (class(locations) != "logical"){
+    if (!is.logical(locations)){
       stop ("Please include only logical values for locations argument")}
-    if (class(low.col) != "character"){
+    if (!is.character(low.col)){
       stop ("Please include only character values for low.col argument, introduce valid color names.")}
-    if (class(mid.col) != "character"){
+    if (!is.character(mid.col)){
       stop ("Please include only character values for mid.col argument, introduce valid color names.")}
-    if (class(high.col) != "character"){
+    if (!is.character(high.col)){
       stop ("Please include only character values for high.col argument, introduce valid color names.")}
 
     frame3 <- plot_hour(data, result = "table", locations = locations)

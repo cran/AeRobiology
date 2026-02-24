@@ -45,11 +45,11 @@ plot_summary<-function (data,
 
   if(export.plot == TRUE){ifelse(!dir.exists(file.path("plot_AeRobiology")), dir.create(file.path("plot_AeRobiology")), FALSE)}
   data<-data.frame(data)
-  if(class(data) != "data.frame") stop ("Please include a data.frame: first column with date, and the rest with pollen types")
+  if(!is.data.frame(data)) stop ("Please include a data.frame: first column with date, and the rest with pollen types")
 
-  if(class(pollen) != "character") stop ("Please include only charactr values for 'pollen'")
+  if(!is.character(pollen)) stop ("Please include only charactr values for 'pollen'")
 
-  if(class(export.plot) != "logical") stop ("Please include only logical values for export.plot argument")
+  if(!is.logical(export.plot)) stop ("Please include only logical values for export.plot argument")
 
   if(export.format != "pdf" & export.format != "png") stop ("Please export.format only accept values: 'pdf' or 'png'")
 
@@ -57,9 +57,9 @@ plot_summary<-function (data,
   data[,1]<-as.Date(data[,1])
 
 
-  if(class(axisname) != "character") stop ("Please include only character values for 'axisname'")
+  if(!is.character(axisname)) stop ("Please include only character values for 'axisname'")
 
-  # if(class(interpolation) != "logical") stop ("Please include only logical values for interpolation argument")
+  # if(!is.logical(interpolation)) stop ("Please include only logical values for interpolation argument")
   #
   # if(int.method != "lineal" & int.method != "movingmean" & int.method != "tseries" &  int.method != "spline") stop ("Please int.method only accept values: 'lineal', 'movingmean', 'tseries' or 'spline'")
   #

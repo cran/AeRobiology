@@ -44,22 +44,22 @@ plot_normsummary<-function (data,
 
   if(export.plot == TRUE){ifelse(!dir.exists(file.path("plot_AeRobiology")), dir.create(file.path("plot_AeRobiology")), FALSE)}
   data<-data.frame(data)
-  if(class(data) != "data.frame") stop ("Please include a data.frame: first column with date, and the rest with pollen types")
+  if(!is.data.frame(data)) stop ("Please include a data.frame: first column with date, and the rest with pollen types")
 
-  if(class(pollen) != "character") stop ("Please include only character values for 'pollen'")
+  if(!is.character(pollen)) stop ("Please include only character values for 'pollen'")
 
-  if(class(export.plot) != "logical") stop ("Please include only logical values for export.plot argument")
+  if(!is.logical(export.plot)) stop ("Please include only logical values for export.plot argument")
 
   if(export.format != "pdf" & export.format != "png") stop ("Please export.format only accept values: 'pdf' or 'png'")
 
   if(class(data[,1])[1]!="Date" & !is.POSIXt(data[,1])) {stop("Please the first column of your data must be the date in 'Date' format")}
   data[,1]<-as.Date(data[,1])
 
-  if(class(interpolation) != "logical") stop ("Please include only logical values for interpolation argument")
+  if(!is.logical(interpolation)) stop ("Please include only logical values for interpolation argument")
 
-  if(class(axisname) != "character") stop ("Please include only character values for 'axisname'")
+  if(!is.character(axisname)) stop ("Please include only character values for 'axisname'")
 
-  if(class(color.plot) != "character") stop ("Please include only character values indicating the name of a colour for 'color.plot'")
+  if(!is.character(color.plot)) stop ("Please include only character values indicating the name of a colour for 'color.plot'")
 
   # if(int.method != "lineal" & int.method != "movingmean" & int.method != "spline") stop ("Please int.method only accept values: 'lineal', 'movingmean' or 'spline'")
 

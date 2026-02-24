@@ -17,10 +17,10 @@
 iplot_pollen<-function(data, year){
 
   data<-data.frame(data)
-  if(class(data) != "data.frame") stop ("Please include a data.frame: first column with date, and the rest with pollen types")
+  if(!is.data.frame(data)) stop ("Please include a data.frame: first column with date, and the rest with pollen types")
 
-  if(class(year) != "numeric") stop ("Please include only numeric values for 'year' (including only years in your database)")
-  if(class(data[,1])!="Date" & !is.POSIXt(data[,1])) {stop("Please the first column of your data must be the date in 'Date' format")}
+  if(!is.numeric(year)) stop ("Please include only numeric values for 'year' (including only years in your database)")
+  if(!inherits(data[,1], "Date") & !is.POSIXt(data[,1])) {stop("Please the first column of your data must be the date in 'Date' format")}
   colnames(data)[1]<-"date"
   data[,1]<-as.Date(data[,1])
 

@@ -32,12 +32,12 @@ plot_ps <- function(data,
            int.method="lineal",
            axisname= expression(paste("Pollen grains / m" ^ "3")),
            ...) {
-    if(class(axisname)!="expression" & class(axisname)!="character"){stop("axisname: Please, insert only a character string or an expression")}
-    if (class(fill.col) != "character") {
+    if(!inherits(axisname, "expression") & !inherits(axisname, "character")){stop("axisname: Please, insert only a character string or an expression")}
+    if (!is.character(fill.col)) {
       stop("fill.col: Please, insert only a character string defining an existing color")
     }
   data<-data.frame(data)
-    if (class(data) != "data.frame" &
+    if (!is.data.frame(data) &
         !is.null(data)) {
       stop ("Please include a data.frame: first column with date, and the rest with pollen types")
     }
@@ -47,13 +47,13 @@ plot_ps <- function(data,
     if (is.null(pollen.type)) {
       stop("Please, select a pollen.type to plot")
     }
-    if (class(pollen.type) != "character") {
+    if (!is.character(pollen.type)) {
       stop("pollen.type: Please, insert only a character string")
     }
-    if (class(year) != "numeric") {
+    if (!is.numeric(year)) {
       stop("year: Please, insert only a number")
     }
-    if (class(days) != "numeric") {
+    if (!is.numeric(days)) {
       stop("days: Please, insert only a number bigger than 1")
     }
     if (days < 1 | days %% 1 != 0 ) {

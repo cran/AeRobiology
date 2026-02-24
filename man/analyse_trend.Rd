@@ -4,10 +4,20 @@
 \alias{analyse_trend}
 \title{Calculating and Plotting Trends of Pollen Data (summary plot).}
 \usage{
-analyse_trend(data, interpolation = TRUE, int.method = "lineal",
-  export.plot = TRUE, export.format = "pdf", export.result = TRUE,
-  method = "percentage", quantil = 0.75, significant = 0.05,
-  split = TRUE, result = "table", ...)
+analyse_trend(
+  data,
+  interpolation = TRUE,
+  int.method = "lineal",
+  export.plot = TRUE,
+  export.format = "pdf",
+  export.result = TRUE,
+  method = "percentage",
+  quantil = 0.75,
+  significant = 0.05,
+  split = TRUE,
+  result = "table",
+  ...
+)
 }
 \arguments{
 \item{data}{A \code{data.frame} object. This \code{data.frame} should include a first column in format \code{Date} and the rest of columns in format \code{numeric} belonging to each pollen type by column.}

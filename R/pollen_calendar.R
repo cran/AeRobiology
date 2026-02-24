@@ -76,32 +76,35 @@ pollen_calendar <- function (data,
           export.plot = FALSE,
           export.format = "pdf",
           legendname = "Pollen grains / m3",...){
-
+  
+  base_dir <- if (nzchar(Sys.getenv("_R_CHECK_PACKAGE_NAME_"))) tempdir() else "."
+  plot_dir <- file.path(base_dir, "plot_AeRobiology")
+  
 #############################################    CHECK THE ARGUMENTS       #############################
 
-if(export.plot == TRUE){ifelse(!dir.exists(file.path("plot_AeRobiology")), dir.create(file.path("plot_AeRobiology")), FALSE)}
+if(export.plot == TRUE){ifelse(!dir.exists(file.path("plot_AeRobiology")),dir.create(plot_dir, recursive = TRUE, showWarnings = FALSE), FALSE)}
   data<-data.frame(data)
-if(class(data) != "data.frame") stop ("Please include a data.frame: first column with date, and the rest with pollen types")
+if(!is.data.frame(data)) stop ("Please include a data.frame: first column with date, and the rest with pollen types")
 
 if(method != "phenological" & method != "violinplot" & method != "heatplot") stop ("Please 'method' argument only accept values: 'phenological', 'violinplot' or 'heatplot'")
 
-if(class(n.types) != "numeric") stop ("Please include only numeric values for 'n.types' argument indicating the number of pollen types which will be displayed")
+if(!is.numeric(n.types)) stop ("Please include only numeric values for 'n.types' argument indicating the number of pollen types which will be displayed")
 
-if(class(start.month) != "numeric" | ((start.month %in% c(1,2,3,4,5,6,7,8,9,10,11,12)) == FALSE)) stop ("Please include only numeric integer values between 1-12 for 'start.month' argument indicating the start month for the pollen calendar")
+if(!is.numeric(start.month) | ((start.month %in% c(1,2,3,4,5,6,7,8,9,10,11,12)) == FALSE)) stop ("Please include only numeric integer values between 1-12 for 'start.month' argument indicating the start month for the pollen calendar")
 
 if(average.method == "avg_after" & start.month != 1) stop ("'avg_after' only can be calculate when 'start.month' argument is equal to 1")
 
-if(class(y.start) != "numeric" & !is.null(y.start)) stop ("Please include only numeric values for y.start argument indicating the start year considered")
+if(!is.numeric(y.start) & !is.null(y.start)) stop ("Please include only numeric values for y.start argument indicating the start year considered")
 
-if(class(y.end) != "numeric" & !is.null(y.end)) stop ("Please include only numeric values for 'y.end' argument indicating the end year considered")
+if(!is.numeric(y.end) & !is.null(y.end)) stop ("Please include only numeric values for 'y.end' argument indicating the end year considered")
 
-if(class(perc1) != "numeric" | perc1 < 0 | perc1 > 100) stop ("Please include only numeric values between 0-100 for 'perc1' argument")
+if(!is.numeric(perc1) | perc1 < 0 | perc1 > 100) stop ("Please include only numeric values between 0-100 for 'perc1' argument")
 
-if(class(perc2) != "numeric" | perc2 < 0 | perc2 > 100) stop ("Please include only numeric values between 0-100 for 'perc2' argument")
+if(!is.numeric(perc2) | perc2 < 0 | perc2 > 100) stop ("Please include only numeric values between 0-100 for 'perc2' argument")
 
 if(perc1 > perc2) stop ("Please should be perc 1 < perc2")
 
-if(class(th.pollen) != "numeric") stop ("Please include only numeric values for 'th.pollen' argument indicating the minimum averaged pollen concentration to be considered")
+if(!is.numeric(th.pollen)) stop ("Please include only numeric values for 'th.pollen' argument indicating the minimum averaged pollen concentration to be considered")
 
 if(average.method != "avg_before" & average.method != "avg_after") stop ("Please average.method only accept values: 'avg_before' or 'avg_after'")
 
@@ -109,21 +112,21 @@ if(period != "daily" & period != "weekly") stop ("Please period only accept valu
 
 if(method.classes != "custom" & method.classes != "exponential") stop ("Please method.classes only accept values: 'custom' or 'exponential'")
 
-if(class(n.classes) != "numeric") stop ("Please include only numeric values for n.classes argument indicating the number of classes which will be used for the plots")
+if(!is.numeric(n.classes)) stop ("Please include only numeric values for n.classes argument indicating the number of classes which will be used for the plots")
 
-if(class(classes) != "numeric") stop ("Please include only numeric values for classes argument indicating the thresholds used for classifying the average pollen concentration for the plots")
+if(!is.numeric(classes)) stop ("Please include only numeric values for classes argument indicating the thresholds used for classifying the average pollen concentration for the plots")
 
 if ((length(classes) + 1) != n.classes) stop ("The number of specified classes must be equal to 'n.classes - 1' because of the maximum threshold will be automatically specified by the maximum value")
 
 if(color != "red" & color != "blue" & color != "green" & color != "purple" & color != "black") stop ("Please 'color' argument only accept values: 'red', 'blue', 'green', 'purple' or 'black'")
 
-if(class(interpolation) != "logical") stop ("Please include only logical values for interpolation argument")
+if(!is.logical(interpolation)) stop ("Please include only logical values for interpolation argument")
 
 if(int.method != "lineal" & int.method != "movingmean" & int.method != "spline" & int.method != "tseries") stop ("Please int.method only accept values: 'lineal', 'movingmean', 'spline' or 'tseries'")
 
 if(result != "plot" & result != "table") stop ("Please result only accept values: 'plot' or 'table'")
 
-if(class(export.plot) != "logical") stop ("Please include only logical values for export.plot argument")
+if(!is.logical(export.plot)) stop ("Please include only logical values for export.plot argument")
 
   if(class(data[,1])[1]!="Date" & !is.POSIXt(data[,1])) {stop("Please the first column of your data must be the date in 'Date' format")}
   data[,1]<-as.Date(data[,1])
@@ -585,7 +588,7 @@ plot.calendar <- ggplot(heat.data, aes(week, variable)) +
 #############################################    EXPORT RESULTS       #############################
 
 if(export.plot == TRUE & export.format == "pdf") {
-  pdf(paste0("plot_AeRobiology/pollen_calendar_",method,".pdf"), ...)
+  pdf(file.path(plot_dir, paste0("pollen_calendar_", method, ".pdf")), ...)
     if(method == "phenological"){print(plot.calendar)
       } else {
         plot(plot.calendar)
@@ -594,13 +597,13 @@ if(export.plot == TRUE & export.format == "pdf") {
   dev.off()}
 
 if(export.plot == TRUE & export.format == "png") {
-  png(paste0("plot_AeRobiology/pollen_calendar_",method,".png"), ...)
+  png(file.path(plot_dir, paste0("pollen_calendar_", method, ".png")), ...)
   if(method == "phenological"){print(plot.calendar)
   } else {
     plot(plot.calendar)
   }
   dev.off()
-  png(paste0("plot_AeRobiology/credits.png"))
+  png(file.path(plot_dir, "credits.png"))
 
   dev.off()
   }

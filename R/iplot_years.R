@@ -17,9 +17,9 @@
 iplot_years<-function(data, pollen){
 
   data<-data.frame(data)
-  if(class(data) != "data.frame") stop ("Please include a data.frame: first column with date, and the rest with pollen types")
+  if(!is.data.frame(data)) stop ("Please include a data.frame: first column with date, and the rest with pollen types")
 
-  if(class(pollen) != "character") stop ("Please include only character values for 'pollen' (including only pollen types in your database)")
+  if(!is.character(pollen)) stop ("Please include only character values for 'pollen' (including only pollen types in your database)")
   if(class(data[,1])[1]!="Date" & !is.POSIXt(data[,1])) {stop("Please the first column of your data must be the date in 'Date' format")}
   data[,1]<-as.Date(data[,1])
   colnames(data)[1]<-"date"

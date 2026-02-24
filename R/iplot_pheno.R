@@ -76,53 +76,58 @@ iplot_pheno <- function(data,
                         type.plot = "static",
                         export.plot = FALSE,
                         export.format = "pdf",...){
-
+  
+  base_dir <- if (nzchar(Sys.getenv("_R_CHECK_PACKAGE_NAME_"))) tempdir() else "."
+  plot_dir <- file.path(base_dir, "plot_AeRobiology")
+  
 #############################################    CHECK THE ARGUMENTS       #############################
 
-  if(export.plot == TRUE){ifelse(!dir.exists(file.path("plot_AeRobiology")), dir.create(file.path("plot_AeRobiology")), FALSE)}
+  if (isTRUE(export.plot)) {
+    dir.create(plot_dir, recursive = TRUE, showWarnings = FALSE)
+  }
 
   data<-data.frame(data)
-  if(class(data) != "data.frame") stop ("Please include a data.frame: first column with date, and the rest with pollen types")
+  if(!is.data.frame(data)) stop ("Please include a data.frame: first column with date, and the rest with pollen types")
 
   if(method != "percentage" & method != "logistic" & method != "moving" & method != "clinical" & method != "grains") stop ("Please method only accept values: 'percentage', 'logistic', 'moving', 'clinical' or 'grains'")
 
-  if(class(n.types) != "numeric") stop ("Please include only numeric values for 'n.types' argument indicating the number of pollen types which will be displayed")
+  if(!is.numeric(n.types)) stop ("Please include only numeric values for 'n.types' argument indicating the number of pollen types which will be displayed")
 
-  if(class(th.day) != "numeric" | th.day < 0) stop ("Please include only numeric values >= 0 for th.day argument")
+  if(!is.numeric(th.day) | th.day < 0) stop ("Please include only numeric values >= 0 for th.day argument")
 
-  if(class(perc) != "numeric" | perc < 0 | perc > 100) stop ("Please include only numeric values between 0-100 for perc argument")
+  if(!is.numeric(perc) | perc < 0 | perc > 100) stop ("Please include only numeric values between 0-100 for perc argument")
 
   if(def.season != "natural" & def.season != "interannual" & def.season != "peak") stop ("Please def.season only accept values: 'natural', 'interannual' or 'peak'")
 
-  if(class(reduction) != "logical") stop ("Please include only logical values for reduction argument")
+  if(!is.logical(reduction)) stop ("Please include only logical values for reduction argument")
 
-  if(class(red.level) != "numeric" | red.level < 0 | red.level > 1) stop ("Please include only numeric values between 0-1 for red.level argument")
+  if(!is.numeric(red.level) | red.level < 0 | red.level > 1) stop ("Please include only numeric values between 0-1 for red.level argument")
 
   if(derivative != 4 & derivative != 5 & derivative != 6) stop ("Please derivative only accept values: 4, 5 or 6")
 
-  if(class(man) != "numeric" | man < 0) stop ("Please include only numeric values > 0 for man argument")
+  if(!is.numeric(man) | man < 0) stop ("Please include only numeric values > 0 for man argument")
 
-  if(class(th.ma) != "numeric" | th.ma < 0) stop ("Please include only numeric values > 0 for th.ma argument")
+  if(!is.numeric(th.ma) | th.ma < 0) stop ("Please include only numeric values > 0 for th.ma argument")
 
-  if(class(n.clinical) != "numeric" | n.clinical < 0) stop ("Please include only numeric values >= 0 for n.clinical argument")
+  if(!is.numeric(n.clinical) | n.clinical < 0) stop ("Please include only numeric values >= 0 for n.clinical argument")
 
-  if(class(window.clinical) != "numeric" | window.clinical < 0) stop ("Please include only numeric values >= 0 for window.clinical argument")
+  if(!is.numeric(window.clinical) | window.clinical < 0) stop ("Please include only numeric values >= 0 for window.clinical argument")
 
-  if(class(window.grains) != "numeric" | window.grains < 0) stop ("Please include only numeric values >= 0 for window.grains argument")
+  if(!is.numeric(window.grains) | window.grains < 0) stop ("Please include only numeric values >= 0 for window.grains argument")
 
-  if(class(th.pollen) != "numeric" | th.pollen < 0) stop ("Please include only numeric values >= 0 for th.pollen argument")
+  if(!is.numeric(th.pollen) | th.pollen < 0) stop ("Please include only numeric values >= 0 for th.pollen argument")
 
-  if(class(th.sum) != "numeric" | th.sum < 0) stop ("Please include only numeric values >= 0 for th.sum argument")
+  if(!is.numeric(th.sum) | th.sum < 0) stop ("Please include only numeric values >= 0 for th.sum argument")
 
   if(type != "none" & type != "birch" & type != "grasses" & type != "cypress" & type != "olive" & type != "ragweed") stop ("Please def.season only accept values: 'none', 'birch', 'grasses', 'cypress', 'olive' or 'ragweed'")
 
-  if(class(interpolation) != "logical") stop ("Please include only logical values for interpolation argument")
+  if(!is.logical(interpolation)) stop ("Please include only logical values for interpolation argument")
 
   if(int.method != "lineal" & int.method != "movingmean" & int.method != "spline" & int.method != "tseries") stop ("Please int.method only accept values: 'lineal', 'movingmean', 'spline' or 'tseries'")
 
   if(type.plot != "static" & type.plot != "dynamic") stop ("Please type.plot only accept values: 'static' or 'dynamic'")
 
-  if(class(export.plot) != "logical") stop ("Please include only logical values for export.plot argument")
+  if(!is.logical(export.plot)) stop ("Please include only logical values for export.plot argument")
 
   if(export.format != "pdf" & export.format != "png") stop ("Please export.format only accept values: 'pdf' or 'png'")
 
@@ -160,7 +165,19 @@ dat.plot <- data.frame(); mean.st <- data.frame()
 for(t in 1:(length(type.name))){
   dat.type <- season.data[[type.name[t]]]
 
-  dat.plot <- rbind(dat.plot, data.frame(phen = as.numeric(c(rep(0, nrow(dat.type)), rep(1, nrow(dat.type)))), j.days = c(dat.type$st.jd, dat.type$en.jd), type = type.name[t])) # %>%  na.omit(.)
+  n <- NROW(dat.type)
+  if (!is.finite(n) || n < 1) next
+  n <- as.integer(n)
+  
+  dat.plot <- rbind(
+    dat.plot,
+    data.frame(
+      phen  = c(rep.int(0, n), rep.int(1, n)),
+      j.days = c(dat.type$st.jd, dat.type$en.jd),
+      type  = type.name[t]
+    )
+  )
+  
 
   mean.st <- rbind(mean.st, data.frame(type = type.name[t], mean.st = mean(dat.type$st.jd, na.rm = TRUE)))
 
@@ -185,15 +202,15 @@ pheno.plot <- ggplot(data = na.omit(dat.plot), aes(y = j.days, x = type)) +
   theme(text = element_text(size = 14), legend.position = "bottom", axis.text.y = element_text(face="italic"))
 
 if(export.plot == TRUE & type.plot == "static" & export.format == "png") {
-  if(method == "percentage") {png(paste0("plot_AeRobiology/pheno_plot_",method,perc,".png"), ...); plot(pheno.plot); dev.off(); png(paste0("plot_AeRobiology/credits.png")); dev.off()}
-  if(method == "logistic") {png(paste0("plot_AeRobiology/pheno_plot_",method,derivative,".png"), ...); plot(pheno.plot); dev.off(); png(paste0("plot_AeRobiology/credits.png")); dev.off()}
-  if(method == "moving") {png(paste0("plot_AeRobiology/pheno_plot_",method,man,"_",th.ma,".png"), ...); plot(pheno.plot); dev.off(); png(paste0("plot_AeRobiology/credits.png")); dev.off()}
-  if(method == "clinical") {png(paste0("plot_AeRobiology/pheno_plot_",method,n.clinical,"_",window.clinical+1,"_",th.pollen,"_",th.sum,".png"), ...); plot(pheno.plot); dev.off(); png(paste0("plot_AeRobiology/credits.png")); dev.off()}
-  if(method == "grains") {png(paste0("plot_AeRobiology/pheno_plot_",method,window.grains+1,"_",th.pollen,".png"), ...); plot(pheno.plot); dev.off(); png(paste0("plot_AeRobiology/credits.png")); dev.off()}
+  if(method == "percentage") {png(file.path(plot_dir, paste0("pheno_plot_", method, perc, ".png")), ...); plot(pheno.plot); dev.off(); png(file.path(plot_dir, "credits.png")); dev.off()}
+  if(method == "logistic") {png(paste0("plot_AeRobiology/pheno_plot_",method,derivative,".png"), ...); plot(pheno.plot); dev.off(); png(file.path(plot_dir, "credits.png")); dev.off()}
+  if(method == "moving") {png(paste0("plot_AeRobiology/pheno_plot_",method,man,"_",th.ma,".png"), ...); plot(pheno.plot); dev.off(); png(file.path(plot_dir, "credits.png")); dev.off()}
+  if(method == "clinical") {png(paste0("plot_AeRobiology/pheno_plot_",method,n.clinical,"_",window.clinical+1,"_",th.pollen,"_",th.sum,".png"), ...); plot(pheno.plot); dev.off(); png(file.path(plot_dir, "credits.png")); dev.off()}
+  if(method == "grains") {png(paste0("plot_AeRobiology/pheno_plot_",method,window.grains+1,"_",th.pollen,".png"), ...); plot(pheno.plot); dev.off(); png(file.path(plot_dir, "credits.png")); dev.off()}
 }
 
 if(export.plot == TRUE & type.plot == "static" & export.format == "pdf") {
-  if(method == "percentage") {pdf(paste0("plot_AeRobiology/pheno_plot_",method,perc,".pdf"), ...); plot(pheno.plot); dev.off()}
+  if(method == "percentage") {pdf(file.path(plot_dir, paste0("pheno_plot_", method, perc, ".pdf")), ...); plot(pheno.plot); dev.off()}
   if(method == "logistic") {pdf(paste0("plot_AeRobiology/pheno_plot_",method,derivative,".pdf"), ...); plot(pheno.plot); dev.off()}
   if(method == "moving") {pdf(paste0("plot_AeRobiology/pheno_plot_",method,man,"_",th.ma,".pdf"), ...); plot(pheno.plot); dev.off()}
   if(method == "clinical") {pdf(paste0("plot_AeRobiology/pheno_plot_",method,n.clinical,"_",window.clinical+1,"_",th.pollen,"_",th.sum,".pdf"), ...); plot(pheno.plot); dev.off()}

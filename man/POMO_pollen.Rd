@@ -4,7 +4,9 @@
 \name{POMO_pollen}
 \alias{POMO_pollen}
 \title{3-hourly pollen data of Munich and Viechtach (2018), obtained automatically by BAA500}
-\format{Time series of 3-hours pollen concentrations expressed as pollen grains / m3 of air.}
+\format{
+Time series of 3-hours pollen concentrations expressed as pollen grains / m3 of air.
+}
 \source{
 \url{https://www.lgl.bayern.de/}
 

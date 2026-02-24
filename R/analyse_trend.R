@@ -52,29 +52,43 @@ analyse_trend  <-   function   (data,
 
   # Sys.setlocale(category = "LC_ALL", locale="english")
 
+  base_dir <- if (nzchar(Sys.getenv("_R_CHECK_PACKAGE_NAME_"))) tempdir() else "."
+  plot_dir <- file.path(base_dir, "plot_AeRobiology")
+  table_dir <- file.path(base_dir, "table_AeRobiology")
+  
+  if (isTRUE(export.plot)) {
+    dir.create(plot_dir, recursive = TRUE, showWarnings = FALSE)
+  }
+  
+  if (isTRUE(export.result)) {
+    dir.create(table_dir, recursive = TRUE, showWarnings = FALSE)
+  }
+  
   #############################################    CHECK THE ARGUMENTS       #############################
 
-  if(export.plot == TRUE){ifelse(!dir.exists(file.path("plot_AeRobiology")), dir.create(file.path("plot_AeRobiology")), FALSE)}
-
-  if(export.result == TRUE){ifelse(!dir.exists(file.path("table_AeRobiology")), dir.create(file.path("table_AeRobiology")), FALSE)}
+  if (isTRUE(export.plot)) {
+    base_dir  <- if (nzchar(Sys.getenv("_R_CHECK_PACKAGE_NAME_"))) tempdir() else "."
+    plot_dir  <- file.path(base_dir, "plot_AeRobiology")
+    if (!dir.exists(plot_dir)) dir.create(plot_dir, recursive = TRUE)
+  }
 
    data<-data.frame(data)
-  if(class(data) != "data.frame") stop ("Please include a data.frame: first column with date, and the rest with pollen types")
+  if(!is.data.frame(data)) stop ("Please include a data.frame: first column with date, and the rest with pollen types")
 
-  if(class(export.plot) != "logical") stop ("Please include only logical values for export.plot argument")
+  if(!is.logical(export.plot)) stop ("Please include only logical values for export.plot argument")
 
   if(export.format != "pdf" & export.format != "png") stop ("Please export.format only accept values: 'pdf' or 'png'")
 
   if(class(data[,1])[1]!="Date" & !is.POSIXt(data[,1])) {stop("Please the first column of your data must be the date in 'Date' format")}
   data[,1]<-as.Date(data[,1])
 
-  if(class(interpolation) != "logical") stop ("Please include only logical values for interpolation argument")
+  if(!is.logical(interpolation)) stop ("Please include only logical values for interpolation argument")
 
-  if(class(split) != "logical") stop ("Please include only logical values for split argument")
+  if(!is.logical(split)) stop ("Please include only logical values for split argument")
 
-  if(class(quantil) != "numeric") stop ("Please include only logical values for quantil argument")
+  if(!is.numeric(quantil)) stop ("Please include only logical values for quantil argument")
 
-  if(class(significant) != "numeric") stop ("Please include only logical values for significant argument")
+  if(!is.numeric(significant)) stop ("Please include only logical values for significant argument")
 
   if(method != "percentage" & method != "logistic" & method != "moving" & method != "clinical" & method != "grains") stop ("Please method only accept values: 'percentage', 'logistic', 'moving', 'clinical' or 'grains'")
 
@@ -85,7 +99,7 @@ analyse_trend  <-   function   (data,
 
   ## Function for p value
   lmp <- function (modelobject) {
-    if (class(modelobject) != "lm") stop("Not an object of class 'lm' ")
+    if (!inherits(modelobject, "lm")) stop("Not an object of class 'lm' ")
     f <- summary(modelobject)$fstatistic
     p <- pf(f[1],f[2],f[3],lower.tail=F)
     attributes(p) <- NULL
@@ -197,14 +211,14 @@ trend_p1 <- ggplot(trendtime2, aes(x=coef, y=type))+
  if (split == F){
    analyse_trend<-trend_p1
    if(export.plot == TRUE  & export.format == "png") {
-     png(paste0("plot_AeRobiology/analyse_trend",".png"), ...)
+     png(file.path(plot_dir, "analyse_trend.png"), ...)
      plot(analyse_trend)
      dev.off()
 
    }
 
    if(export.plot == TRUE  & export.format == "pdf") {
-     pdf(paste0("plot_AeRobiology/analyse_trend", ".pdf"))
+     pdf(file.path(plot_dir, "analyse_trend.pdf"))
      plot(analyse_trend)
 
      dev.off()
@@ -217,7 +231,7 @@ trend_p1 <- ggplot(trendtime2, aes(x=coef, y=type))+
 
 
    if(export.plot == TRUE  & export.format == "png") {
-     png("plot_AeRobiology/analyse_trend_split.png")
+     png(file.path(plot_dir, "analyse_trend_split.png"))
      pushViewport(viewport(layout=grid.layout(2,1)))
      vplayout<-function(x,y) viewport(layout.pos.row = x, layout.pos.col=y)
      print(trend_p2, vp = vplayout(1,1))
@@ -227,7 +241,7 @@ trend_p1 <- ggplot(trendtime2, aes(x=coef, y=type))+
    }
 
    if(export.plot == TRUE  & export.format == "pdf") {
-     pdf("plot_AeRobiology/analyse_trend_split.pdf", ...)
+     pdf(file.path(plot_dir, "analyse_trend_split.pdf"), ...)
      pushViewport(viewport(layout=grid.layout(2,1)))
      vplayout<-function(x,y) viewport(layout.pos.row = x, layout.pos.col=y)
      print(trend_p2, vp = vplayout(1,1))
@@ -245,8 +259,8 @@ trend_p1 <- ggplot(trendtime2, aes(x=coef, y=type))+
    Attributes = c("st.jd", "pk.jd", "en.jd", "sm.ps", "coef", "p", "", "", "Package", "Authors"),
    Description = c("Start-date (day of the year)","Peak-date (day of year)",  "End-date (day of the year)", "Pollen integral", "Slope of the linear trend", "Significance level of the linear trend",  "", "", "AeRobiology", "Jesus Rojo, Antonio Picornell & Jose Oteros"))
 
- if (export.result == TRUE) {
-   write_xlsx(lista, "table_AeRobiology/summary_of_trends.xlsx")
+ if (isTRUE(export.result)) {
+   write_xlsx(lista, file.path(table_dir, "summary_of_trends.xlsx"))
  }
 
  if (result=="table"){

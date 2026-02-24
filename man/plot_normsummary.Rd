@@ -4,10 +4,19 @@
 \alias{plot_normsummary}
 \title{Plotting the Amplitude of Several Pollen Seasons.}
 \usage{
-plot_normsummary(data, pollen, mave = 1, normalized = FALSE,
-  interpolation = TRUE, int.method = "lineal", export.plot = FALSE,
-  export.format = "pdf", color.plot = "orange2",
-  axisname = "Pollen grains / m3", ...)
+plot_normsummary(
+  data,
+  pollen,
+  mave = 1,
+  normalized = FALSE,
+  interpolation = TRUE,
+  int.method = "lineal",
+  export.plot = FALSE,
+  export.format = "pdf",
+  color.plot = "orange2",
+  axisname = "Pollen grains / m3",
+  ...
+)
 }
 \arguments{
 \item{data}{A \code{data.frame} object. This \code{data.frame} should include a first column in format \code{Date} and the rest of columns in format \code{numeric} belonging to each pollen type by column.}

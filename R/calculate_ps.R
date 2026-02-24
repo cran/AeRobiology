@@ -113,46 +113,62 @@ calculate_ps <- function(data,
 
   ######################################################################################################
 
-  if(class(export.plot) != "logical") stop ("Please include only logical values for export.plot argument")
+  if(!is.logical(export.plot)) stop ("Please include only logical values for export.plot argument")
 
-  if(class(export.result) != "logical") stop ("Please include only logical values for export.result argument")
-
-  if(export.plot == TRUE){ifelse(!dir.exists(file.path("plot_AeRobiology")), dir.create(file.path("plot_AeRobiology")), FALSE); plot = TRUE}
-
-  if(export.result == TRUE){ifelse(!dir.exists(file.path("table_AeRobiology")), dir.create(file.path("table_AeRobiology")), FALSE)}
+  if(!is.logical(export.result)) stop ("Please include only logical values for export.result argument")
+  
+  in_check <- nzchar(Sys.getenv("_R_CHECK_PACKAGE_NAME_"))
+  base_dir <- if (in_check) tempdir() else getwd()
+  
+  if (isTRUE(export.plot)) {
+    plot_dir <- file.path(base_dir, "plot_AeRobiology")
+    if (!dir.exists(plot_dir)) {
+      dir.create(plot_dir, recursive = TRUE, showWarnings = FALSE)
+    }
+    plot <- TRUE
+  }
+  
+  if (isTRUE(export.result)) {
+    table_dir <- file.path(base_dir, "table_AeRobiology")
+    if (!dir.exists(table_dir)) {
+      dir.create(table_dir, recursive = TRUE, showWarnings = FALSE)
+    }
+  }
+  
+  
 
   data<-data.frame(data)
-  if(class(data) != "data.frame") stop ("Please include a data.frame: first column with date, and the rest with pollen types")
+  if(!is.data.frame(data)) stop ("Please include a data.frame: first column with date, and the rest with pollen types")
 
-  if(class(th.day) != "numeric" | th.day < 0) stop ("Please include only numeric values >= 0 for th.day argument")
+  if(!is.numeric(th.day) | th.day < 0) stop ("Please include only numeric values >= 0 for th.day argument")
 
-  if(class(perc) != "numeric" | perc < 0 | perc > 100) stop ("Please include only numeric values between 0-100 for perc argument")
+  if(!is.numeric(perc) | perc < 0 | perc > 100) stop ("Please include only numeric values between 0-100 for perc argument")
 
-  if(class(reduction) != "logical") stop ("Please include only logical values for reduction argument")
+  if(!is.logical(reduction)) stop ("Please include only logical values for reduction argument")
 
-  if(class(red.level) != "numeric" | red.level < 0 | red.level > 1) stop ("Please include only numeric values between 0-1 for red.level argument")
+  if(!is.numeric(red.level) | red.level < 0 | red.level > 1) stop ("Please include only numeric values between 0-1 for red.level argument")
 
   if(derivative != 4 & derivative != 5 & derivative != 6) stop ("Please derivative only accept values: 4, 5 or 6")
 
-  if(class(man) != "numeric" | man < 0) stop ("Please include only numeric values > 0 for man argument")
+  if(!is.numeric(man) | man < 0) stop ("Please include only numeric values > 0 for man argument")
 
-  if(class(th.ma) != "numeric" | th.ma < 0) stop ("Please include only numeric values > 0 for th.ma argument")
+  if(!is.numeric(th.ma) | th.ma < 0) stop ("Please include only numeric values > 0 for th.ma argument")
 
   if(result != "table" & result != "list") stop ("Please result only accept values: 'table' or 'list'")
 
-  if(class(plot) != "logical") stop ("Please include only logical values for plot argument")
+  if(!is.logical(plot)) stop ("Please include only logical values for plot argument")
 
-  if(class(n.clinical) != "numeric" | n.clinical < 0) stop ("Please include only numeric values >= 0 for n.clinical argument")
+  if(!is.numeric(n.clinical) | n.clinical < 0) stop ("Please include only numeric values >= 0 for n.clinical argument")
 
-  if(class(window.clinical) != "numeric" | window.clinical < 0) stop ("Please include only numeric values >= 0 for window.clinical argument")
+  if(!is.numeric(window.clinical) | window.clinical < 0) stop ("Please include only numeric values >= 0 for window.clinical argument")
 
-  if(class(window.grains) != "numeric" | window.grains < 0) stop ("Please include only numeric values >= 0 for window.grains argument")
+  if(!is.numeric(window.grains) | window.grains < 0) stop ("Please include only numeric values >= 0 for window.grains argument")
 
-  if(class(th.pollen) != "numeric" | th.pollen < 0) stop ("Please include only numeric values >= 0 for th.pollen argument")
+  if(!is.numeric(th.pollen) | th.pollen < 0) stop ("Please include only numeric values >= 0 for th.pollen argument")
 
-  if(class(th.sum) != "numeric" | th.sum < 0) stop ("Please include only numeric values >= 0 for th.sum argument")
+  if(!is.numeric(th.sum) | th.sum < 0) stop ("Please include only numeric values >= 0 for th.sum argument")
 
-  if(class(interpolation) != "logical") stop ("Please include only logical values for interpolation argument")
+  if(!is.logical(interpolation)) stop ("Please include only logical values for interpolation argument")
 
   if(int.method != "lineal" & int.method != "movingmean" & int.method != "spline" & int.method != "tseries") stop ("Please int.method only accept values: 'lineal', 'movingmean', 'spline' or 'tseries'")
 
@@ -575,21 +591,35 @@ calculate_ps <- function(data,
     result.ps$en.dt <- as.Date(strptime(result.ps$en.dt, "%Y-%m-%d"))
     result.ps$pk.dt <- as.Date(strptime(result.ps$pk.dt, "%Y-%m-%d"))
 
-    if(export.plot == TRUE){plot.season <- recordPlot()}
+    if (isTRUE(export.plot)){plot.season <- recordPlot()}
 
     list.results[[type.name[t]]] <- result.ps
 
     par(mfrow = c(1,1), mar = c(5.1, 4.1, 4.1, 2.1))
 
-    if(export.plot == TRUE){
-      if(method == "percentage") {dev.copy(pdf, paste0("plot_AeRobiology/plot_",type.name[t],"_",method,perc,".pdf")); plot.season; dev.off()}
-      if(method == "logistic") {dev.copy(pdf, paste0("plot_AeRobiology/plot_",type.name[t],"_",method,derivative,".pdf")); plot.season;  dev.off()}
-      if(method == "moving") {dev.copy(pdf, paste0("plot_AeRobiology/plot_",type.name[t],"_",method,man,"_",th.ma,".pdf")); plot.season; dev.off()}
-      if(method == "clinical") {dev.copy(pdf, paste0("plot_AeRobiology/plot_",type.name[t],"_",method,n.clinical,"_",window.clinical+1,"_",th.pollen,"_",th.sum,".pdf")); plot.season; dev.off()}
-      if(method == "grains") {dev.copy(pdf, paste0("plot_AeRobiology/plot_",type.name[t],"_",method,window.grains+1,"_",th.pollen,".pdf")); plot.season; dev.off()}
-
+    if (isTRUE(export.plot)) {
+      if (method == "percentage") {
+        dev.copy(pdf, file.path(plot_dir, paste0("plot_", type.name[t], "_", method, perc, ".pdf")))
+        plot.season; dev.off()
       }
-  }
+      if (method == "logistic") {
+        dev.copy(pdf, file.path(plot_dir, paste0("plot_", type.name[t], "_", method, derivative, ".pdf")))
+        plot.season; dev.off()
+      }
+      if (method == "moving") {
+        dev.copy(pdf, file.path(plot_dir, paste0("plot_", type.name[t], "_", method, man, "_", th.ma, ".pdf")))
+        plot.season; dev.off()
+      }
+      if (method == "clinical") {
+        dev.copy(pdf, file.path(plot_dir, paste0("plot_", type.name[t], "_", method, n.clinical, "_", window.clinical + 1, "_", th.pollen, "_", th.sum, ".pdf")))
+        plot.season; dev.off()
+      }
+      if (method == "grains") {
+        dev.copy(pdf, file.path(plot_dir, paste0("plot_", type.name[t], "_", method, window.grains + 1, "_", th.pollen, ".pdf")))
+        plot.season; dev.off()
+      }
+    }
+    
 
   par(mfrow = c(1,1), mar = c(5.1, 4.1, 4.1, 2.1))
   #if(plot == TRUE){graphics.off()}
@@ -609,16 +639,28 @@ calculate_ps <- function(data,
         Attributes = c("Pollen type", "seasons", "st.dt", "st.jd", "en.dt", "en.jd", "ln.ps", "sm.tt", "sm.ps", "pk.val", "pk.dt", "pk.jd", "ln.prpk", "sm.prpk", "ln.pspk", "sm.pspk", "daysth", "st.dt.hs", "st.jd.hs", "en.dt.hs", "en.jd.hs", "", "", "Method of the pollen season", "Interpolation", "Interpolation method", "Method for defining period", "", "Aditional arguments", "perc", "th.day", "reduction", "red.level", "derivative", "man", "th.ma", "n.clinical", "window.clinical", "window.grains", "th.pollen", "th.sum", "type", "", "", "Package", "Authors"),
         Description = c("Pollen type", "Year of the beginning of the season", "Start-date (date)", "Start-date (day of the year)", "End-date (date)", "End-date (day of the year)", "Length of the season", "Total sum", "Pollen integral", "Peak value", "Peak-date (date)", "Peak-date (day of year)", "Length of the pre-peak period", "Pollen integral of the pre-peak period", "Length of the post-peak period", "Pollen integral of the post-peak period", paste0("Number of days with more than ", th.day, " pollen grains"), "Start-date of the High pollen season (date, only for clinical method)", "Start-date of the High pollen season (day of the year, only for clinical method)", "End-date of the High pollen season (date, only for clinical method)", "End-date of the High pollen season (day of the year, only for clinical method)", "", "", method, interpolation, int.method, def.season, "", "", perc, th.day, reduction, red.level, derivative, man, th.ma, n.clinical, window.clinical, window.grains, th.pollen, th.sum, type,  "", "", "AeRobiology", "Jesus Rojo, Antonio Picornell & Jose Oteros"))
 
-  if (export.result == TRUE) {
-    if(method == "percentage") {write_xlsx(list.results, paste0("table_AeRobiology/table_ps_",method,perc,".xlsx"))}
-    if(method == "logistic") {write_xlsx(list.results, paste0("table_AeRobiology/table_ps_",method,derivative,".xlsx"))}
-    if(method == "moving") {write_xlsx(list.results, paste0("table_AeRobiology/table_ps_",method,man,"_",th.ma,".xlsx"))}
-    if(method == "clinical") {write_xlsx(list.results, paste0("table_AeRobiology/table_ps_",method,n.clinical,"_",window.clinical+1,"_",th.pollen,"_",th.sum,".xlsx"))}
-    if(method == "grains") {write_xlsx(list.results, paste0("table_AeRobiology/table_ps_",method,window.grains+1,"_",th.pollen,".xlsx"))}
+  if (isTRUE(export.result)) {
+    if (method == "percentage") {
+      write_xlsx(list.results, file.path(table_dir, paste0("table_ps_", method, perc, ".xlsx")))
     }
+    if (method == "logistic") {
+      write_xlsx(list.results, file.path(table_dir, paste0("table_ps_", method, derivative, ".xlsx")))
+    }
+    if (method == "moving") {
+      write_xlsx(list.results, file.path(table_dir, paste0("table_ps_", method, man, "_", th.ma, ".xlsx")))
+    }
+    if (method == "clinical") {
+      write_xlsx(list.results, file.path(table_dir, paste0("table_ps_", method, n.clinical, "_", window.clinical + 1, "_", th.pollen, "_", th.sum, ".xlsx")))
+    }
+    if (method == "grains") {
+      write_xlsx(list.results, file.path(table_dir, paste0("table_ps_", method, window.grains + 1, "_", th.pollen, ".xlsx")))
+    }
+  }
+  
 
   par(mfrow = c(1,1), mar = c(5.1, 4.1, 4.1, 2.1))
 
   if (result == "table") {return(df.results)}
   if (result == "list") {return(list.ps)}
+  }
 }

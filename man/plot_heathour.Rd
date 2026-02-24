@@ -4,8 +4,13 @@
 \alias{plot_heathour}
 \title{Plotting hourly patterns with heatplot}
 \usage{
-plot_heathour(data, locations = FALSE, low.col = "blue",
-  mid.col = "white", high.col = "red")
+plot_heathour(
+  data,
+  locations = FALSE,
+  low.col = "blue",
+  mid.col = "white",
+  high.col = "red"
+)
 }
 \arguments{
 \item{data}{A \code{data.frame} object with the structure \code{long}. Where the first two columns are \code{factors} indicating the \code{pollen} and the \code{location}. The 3 and 4 columns are \code{POSIXct}, showing the hour. Where the third column is the beguinning of the concentration \code{from} and the fourth column is the end time of the concentrtion data \code{to}. The fifth column shows the concentrations of the different pollen types as \code{numeric}. Please see the example 3-hourly data from the automatic pollen monitor BAA500 from Munich and Viechtach in Bavaria (Germany) \code{data("POMO_pollen")}, supplied by ePIN Network supported by the Bavarian Government.}

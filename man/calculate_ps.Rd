@@ -4,13 +4,31 @@
 \alias{calculate_ps}
 \title{Estimation of the Main Parameters of the Pollen Season}
 \usage{
-calculate_ps(data, method = "percentage", th.day = 100, perc = 95,
-  def.season = "natural", reduction = FALSE, red.level = 0.9,
-  derivative = 5, man = 11, th.ma = 5, n.clinical = 5,
-  window.clinical = 7, window.grains = 5, th.pollen = 10,
-  th.sum = 100, type = "none", interpolation = TRUE,
-  int.method = "lineal", maxdays = 30, result = "table",
-  plot = TRUE, export.plot = FALSE, export.result = FALSE)
+calculate_ps(
+  data,
+  method = "percentage",
+  th.day = 100,
+  perc = 95,
+  def.season = "natural",
+  reduction = FALSE,
+  red.level = 0.9,
+  derivative = 5,
+  man = 11,
+  th.ma = 5,
+  n.clinical = 5,
+  window.clinical = 7,
+  window.grains = 5,
+  th.pollen = 10,
+  th.sum = 100,
+  type = "none",
+  interpolation = TRUE,
+  int.method = "lineal",
+  maxdays = 30,
+  result = "table",
+  plot = TRUE,
+  export.plot = FALSE,
+  export.result = FALSE
+)
 }
 \arguments{
 \item{data}{A \code{data.frame} object including the general database where calculation of the pollen season must be applied. This \code{data.frame} must include a first column in \code{Date} format and the rest of columns in \code{numeric} format belonging to each pollen type by column.}

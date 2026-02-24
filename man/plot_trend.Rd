@@ -4,12 +4,25 @@
 \alias{plot_trend}
 \title{Calculating and Plotting Trends of Pollen Data.}
 \usage{
-plot_trend(data, interpolation = TRUE, int.method = "lineal",
-  export.plot = TRUE, export.format = "pdf", export.result = TRUE,
-  method = "percentage", ...)
+plot_trend(
+  data,
+  base_dir = getwd(),
+  table_dir = file.path(base_dir, "table_AeRobiology"),
+  interpolation = TRUE,
+  int.method = "lineal",
+  export.plot = TRUE,
+  export.format = "pdf",
+  export.result = TRUE,
+  method = "percentage",
+  ...
+)
 }
 \arguments{
 \item{data}{A \code{data.frame} object. This \code{data.frame} should include a first column in format \code{Date} and the rest of columns in format \code{numeric} belonging to each pollen type by column.}
+
+\item{base_dir}{Character. Base directory where output tables are stored.}
+
+\item{table_dir}{Character. Directory where tables are exported.}
 
 \item{interpolation}{A \code{logical} value specifying if the visualization shows the gaps in the inputs data (\code{interpolation = FALSE}) or if an interpolation method is used for filling the gaps (\code{interpolation = TRUE}). By default, \code{interpolation = TRUE}.}
 

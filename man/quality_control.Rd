@@ -4,13 +4,29 @@
 \alias{quality_control}
 \title{Quality Control of a Pollen Database}
 \usage{
-quality_control(data, int.window = 2, perc.miss = 20,
-  ps.method = "percentage", result = "plot", th.day = 100,
-  perc = 95, def.season = "natural", reduction = FALSE,
-  red.level = 0.9, derivative = 5, man = 11, th.ma = 5,
-  n.clinical = 5, window.clinical = 7, window.grains = 5,
-  th.pollen = 10, th.sum = 100, type = "none",
-  int.method = "lineal", ...)
+quality_control(
+  data,
+  int.window = 2,
+  perc.miss = 20,
+  ps.method = "percentage",
+  result = "plot",
+  th.day = 100,
+  perc = 95,
+  def.season = "natural",
+  reduction = FALSE,
+  red.level = 0.9,
+  derivative = 5,
+  man = 11,
+  th.ma = 5,
+  n.clinical = 5,
+  window.clinical = 7,
+  window.grains = 5,
+  th.pollen = 10,
+  th.sum = 100,
+  type = "none",
+  int.method = "lineal",
+  ...
+)
 }
 \arguments{
 \item{data}{A \code{data.frame} object including the general database where quality must be checked. This data.frame must include a first column in \code{Date} format and the rest of columns in \code{numeric} format belonging to each pollen type by column. It is not necessary to insert the missing gaps; the function will automatically detect them.}
