@@ -565,6 +565,26 @@ pollen_calendar(data = munich_pollen, method = "heatplot", period = "weekly", co
 
 In this case, we have included other restrictive arguments as **`n.types`** limiting the number of pollen types and **`y.start`** and **`y.end`**, limiting the period to be considered for the pollen calendar.
 
+## Monthly heatmap
+
+The function **<font face="verdana">plot_monthly_heatmap()</font>** produces a simple heatmap of the **monthly sums of daily pollen concentrations** for one selected pollen type. Months are represented in the x axis and years in the y axis. The main arguments are:
+
+* **data**: a `data.frame` with the first column in "Date" format and pollen types in numeric columns.
+* **pollen.type**: the pollen type to be represented.
+* **start.month**: the first month shown in the x axis. January is used by default.
+* **color.A, color.B**: colors used to build the gradient palette. By default, yellow and red are used.
+* **location**: if the database includes several locations in a column such as `location`, `city` or `station`, the selected location can be specified. If it is not specified, the first location in the database is used.
+
+```{r echo = TRUE, results='hide', fig.keep='all', warning=FALSE}
+plot_monthly_heatmap(munich_pollen, pollen.type = "Betula")
+```
+
+The first month of the heatmap can be changed when the pollen season is better represented between two natural years:
+
+```{r echo = TRUE, results='hide', fig.keep='all', warning=FALSE}
+plot_monthly_heatmap(munich_pollen, pollen.type = "Poaceae", start.month = 6, color.A = "white", color.B = "darkgreen")
+```
+
 ## "phenological" method
 
 This pollen calendar is based on the phenological definition of the pollen season and adapted from the methodology proposed by [Werchan et al. (2018)](https://link.springer.com/article/10.1007/s40629-018-0055-1). 

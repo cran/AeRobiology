@@ -144,6 +144,12 @@ pollen_calendar(data = munich_pollen, method = "heatplot", period = "daily", col
 ## ----echo = TRUE, results='hide',fig.keep='all', warning=FALSE----------------
 pollen_calendar(data = munich_pollen, method = "heatplot", period = "weekly", color = "blue", method.classes = "exponential", n.types = 4, y.start = 2011, y.end = 2014, interpolation = FALSE)
 
+## ----echo = TRUE, results='hide', fig.keep='all', warning=FALSE---------------
+plot_monthly_heatmap(munich_pollen, pollen.type = "Betula")
+
+## ----echo = TRUE, results='hide', fig.keep='all', warning=FALSE---------------
+plot_monthly_heatmap(munich_pollen, pollen.type = "Poaceae", start.month = 6, color.A = "white", color.B = "darkgreen")
+
 ## ----echo = TRUE, results='hide',fig.keep='all', warning=FALSE----------------
 pollen_calendar(data = munich_pollen, method = "phenological", n.types = 5, y.start = 2011, y.end = 2014, interpolation = FALSE)
 

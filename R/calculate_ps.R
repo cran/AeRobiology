@@ -619,6 +619,7 @@ calculate_ps <- function(data,
         plot.season; dev.off()
       }
     }
+  }
     
 
   par(mfrow = c(1,1), mar = c(5.1, 4.1, 4.1, 2.1))
@@ -662,5 +663,4 @@ calculate_ps <- function(data,
 
   if (result == "table") {return(df.results)}
   if (result == "list") {return(list.ps)}
-  }
 }

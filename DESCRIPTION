@@ -1,7 +1,7 @@
 Package: AeRobiology
 Type: Package
 Title: A Computational Tool for Aerobiological Data
-Version: 2.0.2
+Version: 2.0.3
 Authors@R: c(
     person(given = "Jesus",
            family = "Rojo",
@@ -31,6 +31,6 @@ RoxygenNote: 7.3.3
 Suggests: testthat, knitr, rmarkdown
 VignetteBuilder: knitr
 NeedsCompilation: no
-Packaged: 2026-02-24 18:40:02 UTC; Xaxe1
+Packaged: 2026-07-09 09:19:54 UTC; CodexSandboxOffline
 Repository: CRAN
-Date/Publication: 2026-02-24 19:10:06 UTC
+Date/Publication: 2026-07-09 13:40:02 UTC

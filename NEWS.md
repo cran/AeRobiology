@@ -1,5 +1,10 @@
 # AeRobiology version 2.0
 
+### Changes in AeRobiology version 2.0.3
+
+* Fixed a bug in calculate_ps() that returned results after the first pollen type when several pollen columns were provided.
+* Added plot_monthly_heatmap() to represent monthly sums of daily pollen concentrations by year for a selected pollen type and optional location.
+
 ### Changes in AeRobiology version 2.0.2
 
 * Authors Information updated.
