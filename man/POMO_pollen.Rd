@@ -8,9 +8,8 @@
 Time series of 3-hours pollen concentrations expressed as pollen grains / m3 of air.
 }
 \source{
-\url{https://www.lgl.bayern.de/}
-
-\url{https://www.zaum-online.de/}
+Bavarian State Office for Health and Food Safety (LGL) and Zentrum Allergie
+und Umwelt (ZAUM).
 }
 \usage{
 POMO_pollen

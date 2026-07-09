@@ -1,5 +1,10 @@
 # AeRobiology version 2.0
 
+### Changes in AeRobiology version 2.0.4
+
+* Resubmission with an increased version number after CRAN incoming checks detected an existing 2.0.3 submission.
+* Kept source attribution for the example data sets as institution names instead of checkable external URLs.
+
 ### Changes in AeRobiology version 2.0.3
 
 * Fixed a bug in calculate_ps() that returned results after the first pollen type when several pollen columns were provided.

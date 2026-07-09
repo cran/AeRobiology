@@ -57,7 +57,7 @@ During this tutorial we are going to use the **pollen data from Munich** which a
 
   <p class="comment">**`munich_pollen`** is a data set containing information of daily concentrations of pollen in the atmosphere of Munich during the years 2010_2015. Pollen types included: "Alnus", "Betula", "Taxus", "Fraxinus", "Poaceae", "Quercus", "Ulmus" and "Urtica".  
 Data were obtained at Munich (Zentrum Allergie und Umwelt, ZAUM) using a Hirst_type volumetric pollen trap (Hirst, 1952) following the standard methodology (VDI4252_4_2016). Some gaps have been added to test some functions of the package (e.g. <font size="2" face="verdana">quality_control()</font>, <font size="2" face="verdana">interpollen()</font>). <br>
-The data were obtained by the research team of Prof. Jeroen Buters (Christine Weil & Ingrid Weichenmeier). At the Zentrum Allergie und Umwelt ([ZAUM](https://www.zaum-online.de/), directed by Prof. Carsten B. Schmidt_Weber). </p> 
+The data were obtained by the research team of Prof. Jeroen Buters (Christine Weil & Ingrid Weichenmeier). At the Zentrum Allergie und Umwelt (ZAUM, directed by Prof. Carsten B. Schmidt_Weber). </p> 
 
 You can **load the data** in your working environment by typing:
 

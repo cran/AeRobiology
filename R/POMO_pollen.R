@@ -7,6 +7,6 @@
 #'@references Oteros, J., Pusch, G., Weichenmeier, I., Heimann, U., Mueller, R., Roeseler, S., ... & Buters, J. T. (2015). Automatic and online pollen monitoring.
 #' @references Hirst, J.M., 1952. AN AUTOMATIC VOLUMETRIC SPORE TRAP. Ann. Appl. Biol. 39, 257_265.
 #' @references VDI 4252_4. (2016). Bioaerosole und biologische Agenzien_Ermittlung von Pollen und Sporen in der Aussenluft unterVerwendung  einer volumetrischen  Methode  fuer  einMessnetz zu allergologischen Zwecken. VDI_Richtlinie4252 Blatt 4, Entwurf. VDI/DIN_Handbuch Reinhaltungder Luft, Band 1a: Beuth, Berlin
-#' @source \url{https://www.lgl.bayern.de/}
-#' @source \url{https://www.zaum-online.de/}
+#' @source Bavarian State Office for Health and Food Safety (LGL) and
+#' Zentrum Allergie und Umwelt (ZAUM).
 "POMO_pollen"

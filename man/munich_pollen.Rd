@@ -8,7 +8,7 @@
 Time series of daily pollen concentrations expressed as pollen grains / m3 of air.
 }
 \source{
-\url{https://www.zaum-online.de/}
+Zentrum Allergie und Umwelt (ZAUM).
 }
 \usage{
 munich_pollen
